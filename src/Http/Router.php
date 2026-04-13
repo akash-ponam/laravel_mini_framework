@@ -32,6 +32,33 @@ class Router {
 
     }
 
+    if(is_array($callback)) {
+    
+    [$class,$method] = $callback;
+
+    if(class_exists($class)){
+
+        echo "class is " .$class;
+
+        $controller = new $class();
+
+        if (method_exists($controller,$method)) {
+
+        return $controller->$method();
+
+        }
+
+
+    
+
+    }
+    
+
+
+
+
+}
+
 
 
     return " Invalid callback";
