@@ -2,12 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Http\Request;
+
 class ProductController {
 
 
-    public function index(){
+    public function index(Request $request){
 
-                return " <h1> Products List </h1> ";
+                return " <h1>  you requested {$request->url()} </h1> ";
 
 
     }

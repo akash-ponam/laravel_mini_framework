@@ -7,36 +7,107 @@ namespace App\Container;
 class LaravelContainer{
 
     protected $enteries = [];
-    
-    public function set($key,callable $callable){
 
-        $this->enteries[$key] = $callable;
-    
+    protected $shared_instance = [];
 
-    }
 
-    public function get($key){
-
+    // FRESH INSTANCES 
+    public function bind($key, callable $instance_creation_logic){
             
-        if(!$this->enteries[$key]){
-        
-            throw new Exception(" no entry found for  {$key} ");
+        $this->enteries[$key] =  [ 
+            
+        'instance_creation_logic' => $instance_creation_logic,
+        'singleton' =>false
+
+        ];
+
 
         }
 
-        return $this->enteries[$key]($this);
+    //MAKING SINGLETON INSTANCES
+    public function singleton($key,callable $instance_creation_logic){
+
+           $this->enteries[$key] =  [ 
+            
+        'instance_creation_logic' => $instance_creation_logic,
+        'singleton' =>true
+
+        ];
+
+}
+
+
+public function get($key){
+
+    // check if exist in shared_instance return it 
+    
+
+        if(isset($this->shared_instance[$key])){
+
+                
+            return $this->shared_instance[$key];
+
+        }
+
+    
+    // if we dont have enteries for given key 
+    
+        if(!isset($this->enteries[$key])){
+            
+
+            if(class_exists($key)){
+
+                        
+                return new $key();
+            }
+
+
+            throw new \Exception(" no new class {$key} found ");
+        }
+
+
+        // we have entry for given key 
+        //
+
+        $method = $this->enteries[$key]['instance_creation_logic'];
+        
+        $instance = $method($this);
+
+    
+            // if we made singleton instance then we save it for later usee 
+       if($this->enteries[$key]['singleton']){
+        
+    
+                $this->shared_instance[$key] = $instance;
+                
+
+        }
+
+        return $instance;
 
 
 
 
 
-    }
 
-    public function has($key){
 
-        return isset($this->enteries[$key]);
+}
 
-    }
+
+ public function has($key) {
+
+    return isset($this->enteries[$key]) || isset($this->shared_instance[$key]);
+}
+
+
+
+
+
+
+    
+    
+   
+      
 
 
 

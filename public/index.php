@@ -21,7 +21,7 @@ use App\Controllers\ProductController;
 $container  = new LaravelContainer();
 
 
-$container->set(Request::class,function(){
+$container->bind(Request::class,function(){
 
     
     return new Request();
@@ -29,21 +29,17 @@ $container->set(Request::class,function(){
 
 });
 
-$container->set(Router::class,function($c){
+$container->bind(Router::class,function($c){
 
 return new Router($c);
 
 });
 
-/* $request = new Request(); */
-/* $router = new Router(); */
+
 
 $router = $container->get(Router::class);
 
 $request = $container->get(Request::class);
-
-
-
 
 $router->get('/products',[ProductController::class,'index']);
 

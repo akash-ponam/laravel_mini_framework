@@ -2,9 +2,23 @@
 
 namespace App\Http;
 
+use App\Container\LaravelContainer;
+
 class Router {
 
     protected $routes = [] ;
+
+    protected LaravelContainer $container;
+
+
+
+    public function __construct(LaravelContainer $container)
+    {
+        $this->container=$container;
+    }
+
+
+
 
     public function get($uri,$callback){
 
@@ -19,8 +33,8 @@ class Router {
 
         if(!$callback){
         
-        header('HTTP/1.0 404 NOT FOUND');
-
+        /* header('HTTP/1.0 404 NOT FOUND'); */
+        http_response_code(404);
         return "404 - Route not found ";
     
 
@@ -36,25 +50,35 @@ class Router {
     
     [$class,$method] = $callback;
 
-    if(class_exists($class)){
+    $controller = $this->container->has($class)?$this->container->get($class):new $class();
 
-        echo "class is " .$class;
+    $reflection_method = new \ReflectionMethod($controller,$method);
 
-        $controller = new $class();
+    $params = $reflection_method->getParameters();
 
-        if (method_exists($controller,$method)) {
+    $dependencies = [];
 
-        return $controller->$method();
+    foreach ($params as $param) {
+
+        $type= $param->getType();
+        
+        if($type && !$type->isBuiltin()){
+
+            $type_name  = $type->getName();
+
+            $dependencies [] = $this->container->get($type_name);
+
+            
+
 
         }
 
 
-    
 
     }
-    
 
-
+        
+    return $reflection_method->invokeArgs($controller,$dependencies); 
 
 
 }
