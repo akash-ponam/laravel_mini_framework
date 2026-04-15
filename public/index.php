@@ -10,6 +10,9 @@ error_reporting(E_ALL);
 require __DIR__.'/../src/autoload.php';
 
 
+
+
+
 use App\Http\Request;
 use App\Http\Router;
 
@@ -17,6 +20,8 @@ use App\Container\LaravelContainer;
 
 
 use App\Controllers\ProductController;
+
+use App\Middleware\LogMiddleware;
 
 $container  = new LaravelContainer();
 
@@ -36,12 +41,11 @@ return new Router($c);
 });
 
 
-
 $router = $container->get(Router::class);
 
 $request = $container->get(Request::class);
 
-$router->get('/products',[ProductController::class,'index']);
+$router->get('/products',[ProductController::class,'index'])->middleware(LogMiddleware::class);
 
 echo $router->resolve($request->url(),$request->method());
 
