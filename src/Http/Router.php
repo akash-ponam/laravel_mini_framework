@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Container\LaravelContainer;
+use App\Middleware\Middleware;
 
 class Router {
 
@@ -22,70 +23,145 @@ class Router {
 
     public function get($uri,$callback){
 
-    $this->routes['GET'][$uri] = $callback;    // $routes['GET']['/products'] = fetch_products // 
+    $this->routes['GET'][$uri] = ['callback'=>$callback,'middlewares' => [] ];
 
+        
+    return $this;
 
 }
 
+    public function middleware($middleware_class){
+
+        
+        $last_method = array_key_last($this->routes);  // GET POST 
+
+        $last_url = array_key_last($this->routes[$last_method]);
+
+
+        $this->routes[$last_method][$last_url]['middlewares'][] = $middleware_class;
+
+
+
+
+        return $this;
+
+
+
+        
+
+    }
+
+
+
+
     public function resolve($uri,$method) {
 
-        $callback = $this->routes[$method][$uri]?? null;  // $routes['GET']['/products']
 
-        if(!$callback){
-        
-        /* header('HTTP/1.0 404 NOT FOUND'); */
-        http_response_code(404);
-        return "404 - Route not found ";
-    
+        $route_info  = $this->routes[$method][$uri]?? null;
 
-    }
-
-    if(is_callable($callback)){
-
-        return call_user_func($callback);
-
-    }
-
-    if(is_array($callback)) {
-    
-    [$class,$method] = $callback;
-
-    $controller = $this->container->has($class)?$this->container->get($class):new $class();
-
-    $reflection_method = new \ReflectionMethod($controller,$method);
-
-    $params = $reflection_method->getParameters();
-
-    $dependencies = [];
-
-    foreach ($params as $param) {
-
-        $type= $param->getType();
-        
-        if($type && !$type->isBuiltin()){
-
-            $type_name  = $type->getName();
-
-            $dependencies [] = $this->container->get($type_name);
-
+        if(!$route_info){
             
+                http_response_code(404);
+                return " 404  not found";
+        }
+
+
+        $callback = $route_info['callback'];
+
+        $middlewares =  $route_info['middlewares']??[];
+
+
+        $core_action = function()  use ($callback) {
+
+        if(is_callable($callback)){
+            
+
+            return call_user_func($callback);
 
 
         }
 
 
+        if(is_array($callback)){
 
-    }
+        [$class,$method_name]  =  $callback;
+
+        $controller = $this->container->get($class);
+
+        $reflection_method = new \ReflectionMethod($controller,$method_name);
+
+        $params = $reflection_method->getParameters();
+
+        $dependencies = [];
 
         
-    return $reflection_method->invokeArgs($controller,$dependencies); 
+        foreach ($params as $param) {
+
+        
+            $type= $param->getType();
+
+            if($type && !$type->isBuiltin()){
+
+                $type_name = $type->getName();
+                
+                $dependencies[] = $this->container->get($type_name);
+                
+            }
 
 
-}
+
+        }
+
+        return $reflection_method->invokeArgs($controller,$dependencies);
+        }
+
+
+            return "Invalid callback";
+
+    };
+        
+
+    $pipeline = array_reduce(
+    
+    array_reverse($middlewares), // array passed 
+    function($next_layer,$middlware_class){ // reducer 
+    
+        return function() use ($next_layer,$middlware_class){
+
+        $middle_ware_instance = $this->container->get($middlware_class);
+
+        return $middle_ware_instance->handle($this->container->get(Request::class),$next_layer
+
+
+        ); 
+
+    
+
+
+    };
+            
+},
+
+                    
+                
 
 
 
-    return " Invalid callback";
+
+    $core_action  // initial layer 
+
+
+
+
+
+    );
+
+
+
+    return $pipeline();
+        
+
+
 
 
 

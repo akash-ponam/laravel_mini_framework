@@ -37,6 +37,8 @@ class LaravelContainer{
 }
 
 
+
+
 public function get($key){
 
     // check if exist in shared_instance return it 
