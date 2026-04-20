@@ -30,6 +30,20 @@ class Router {
 
 }
 
+
+    public function post($uri,$callback){
+
+    $this->routes['POST'][$uri] = ['callback'=>$callback,'middlewares' => [] ];
+
+        
+    return $this;
+
+}
+
+
+
+
+
     public function middleware($middleware_class){
 
         
@@ -63,6 +77,7 @@ class Router {
             
                 http_response_code(404);
                 return " 404  not found";
+
         }
 
 
@@ -158,9 +173,20 @@ class Router {
 
 
 
-    return $pipeline();
-        
+    $response = $pipeline();
 
+    if(is_array($response) || is_object($response) ) {
+    
+    header('Content-Type: application/json');
+
+    echo json_encode($response);
+
+    return;
+
+
+    }
+        
+    return $response;
 
 
 

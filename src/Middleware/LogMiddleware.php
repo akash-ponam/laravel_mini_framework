@@ -11,7 +11,7 @@ class LogMiddleware implements Middleware {
 
     public function handle(Request $request,Closure $next){
 
-        echo "dekh lo log is incomin lmfao ";
+        /* echo "dekh lo log is incomin lmfao "; */
         return $next($request);
                   
     } 

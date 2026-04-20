@@ -1,15 +1,22 @@
 
 <?php 
 
+
+
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-/* echo "current directory is " . __DIR__; */
 
 require __DIR__.'/../src/autoload.php';
 
-
+if (php_sapi_name() === 'cli-server') {
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    if (is_file(__DIR__ . $path)) {
+        return false;
+    }
+}
 
 
 
@@ -20,8 +27,9 @@ use App\Container\LaravelContainer;
 
 
 use App\Controllers\ProductController;
-
-use App\Middleware\LogMiddleware;
+use App\Controllers\UserController;
+use App\Data\Database;
+use App\Middleware\AuthMiddleware;
 
 $container  = new LaravelContainer();
 
@@ -41,11 +49,47 @@ return new Router($c);
 });
 
 
+$container->singleton(Database::class ,function() {
+
+    $settings = require __DIR__ .'/../src/Data/db_config.php';
+
+    return new Database($settings);
+
+
+
+
+});
+
+
 $router = $container->get(Router::class);
 
 $request = $container->get(Request::class);
 
-$router->get('/products',[ProductController::class,'index'])->middleware(LogMiddleware::class);
+
+$router ->get ('/home',function(){
+
+    
+    require __DIR__ .'/index.html';
+
+});
+
+$router->get('/api/products',[ProductController::class,'index']);
+
+$router->get('/api/logout',[UserController::class,'logout']);
+
+
+
+$router->get('/api/session',[AuthMiddleware::class,'check_session']);
+
+
+$router->post('/api/register',[UserController::class,'register']);
+
+
+$router->post('/api/login',[UserController::class,'login']);
+
+
+$router->get('/api/user',[UserController::class,'getUser']);
+
 
 echo $router->resolve($request->url(),$request->method());
 

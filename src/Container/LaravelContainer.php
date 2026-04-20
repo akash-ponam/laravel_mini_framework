@@ -55,15 +55,33 @@ public function get($key){
     // if we dont have enteries for given key 
     
         if(!isset($this->enteries[$key])){
-            
+    
 
-            if(class_exists($key)){
+        if(class_exists($key)){
+    $reflectionClass = new \ReflectionClass($key);
+    $constructor = $reflectionClass->getConstructor();
 
-                        
-                return new $key();
-            }
+    // If there's no constructor, we can safely "new" it like before
+    if (!$constructor) {
+        return new $key();
+    }
+
+    $parameters = $constructor->getParameters();
+    $dependencies = [];
+
+    foreach ($parameters as $parameter) {
+        $type = $parameter->getType();
+        
+        // This is the "Magic": The container calls ITSELF to find the dependency
+        $dependencies[] = $this->get($type->getName());
+    }
+
+    return $reflectionClass->newInstanceArgs($dependencies);
+}
 
 
+
+          
             throw new \Exception(" no new class {$key} found ");
         }
 
@@ -100,18 +118,6 @@ public function get($key){
 
     return isset($this->enteries[$key]) || isset($this->shared_instance[$key]);
 }
-
-
-
-
-
-
-    
-    
-   
-      
-
-
 
     
 }
