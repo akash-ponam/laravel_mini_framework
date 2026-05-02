@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title></title>
+        <link href="/css/add_product.css" rel="stylesheet">
+    </head>
+    <body>
+
+        <form id="add_form">
+
+
+
+            <h1>Add New Product</h1>
+
+
+
+            <input type="number" name="product_id" placeholder="product id " required>
+
+
+            <input type="text" name="name" placeholder="product name" required id="product_name" >
+            
+
+            <input type="text" name="slug" placeholder="product slug" required id="product_slug">
+
+            
+            <select id="brand" name="brand" required>
+
+                <option >ESports</option>
+                <option > L-Kidas </option>
+                <option >E-wears</option>
+
+            </select>
+
+
+             <select id="category" name="category">
+
+                <option> Outerwear </option>
+                <option> Footwear</option>
+                <option> Essentials</option>
+             </select>
+
+            <input type="file" name="product_image" accept="image/*" id="product_image_id"  >
+            <button type="submit" id="btn_add_product">ADD PRODUCT</button>
+          
+        </form>
+    
+    
+
+
+
+    <script type="text/javascript" src="/js/add_product.js?v=1.5">
+        
+    </script>
+    </body>
+</html>

@@ -1,0 +1,86 @@
+
+html{
+
+    font-size: 16px;
+
+
+}
+
+
+body {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+
+
+
+}
+
+
+
+form {
+
+
+    width: 800px;
+
+    height: 400px;
+
+    padding: 1rem;
+
+    border: 0.25rem solid skyblue;
+
+    display: grid;
+
+    grid-template-columns: repeat(2,minmax(100px,400px));
+
+    grid-template-rows: repeat(4,minmax(50px,60px));
+
+    grid-gap: 0.5rem;
+
+
+}
+
+
+form > h1 {
+
+    grid-row: 1 / 2;
+
+    grid-column: 1 / span 3;
+
+    background-color: cyan;
+
+    /* padding: 0.25rem; */
+
+
+
+
+}
+
+
+input {
+
+    border: 0.075rem solid  purple;
+
+
+
+
+}
+
+input:focus {
+
+    border: 0.075rem solid lime;
+
+
+
+}
+
+input:nth-child(6){
+
+    text-align: center;
+
+
+}

@@ -1,11 +1,7 @@
 
-console.log('script is loading');
+console.log('script is loading lolwaa ');
 
 document.addEventListener("DOMContentLoaded",()=>{
-
-
-
-
 
 
 console.log("js loaded");
@@ -40,7 +36,7 @@ const login_btn_spinner =  document.getElementById('login_btn_spinner');
 const login_btn_text = document.getElementById('login_btn_text');
 
 
-const btn_home = document.getElementById('btn_home');
+// const btn_home = document.getElementById('btn_home');
 
 
 
@@ -60,12 +56,17 @@ const btn_home = document.getElementById('btn_home');
 
 
 
-    function show_profile(){
+    function show_profile(user){
 
     profile_view.style.display='block';
     card_title.style.display='none';
     register_view.style.display='none';
     login_view.style.display='none';
+
+    document.getElementById('user_email').innerText = user.email;
+
+    document.getElementById('usr_img').src = user.profile_url;
+        
 
     }
 
@@ -145,52 +146,12 @@ const validate_session = async() => {
 
 
 
-const logout = async(e) => {
 
-    
-
-
-    e.preventDefault();
-
-
-    const  logout_res_http =  await fetch('/api/logout');
-
-    if(logout_res_http.ok){
-
-
-       const  logout_res_json =  await logout_res_http.json();
-
-        console.log(' logout response is ',logout_res_json);
-
-        if(logout_res_json.status ==='success'){
-            
-            console.log('logout ho gya lol');
-
-            localStorage.removeItem('auth_profile_url');
-
-            localStorage.removeItem('auth_mail');
-
-            localStorage.removeItem('auth_loggedin');
-
-            reset_ui();
-
-
-
-        }
-
-
-    }
-
-
-
-
-
-}
 
 
 validate_session();
 
-btn_home.addEventListener("click",logout);
+// btn_home.addEventListener("click",logout);
 
 
 
@@ -230,21 +191,24 @@ try {
 
             console.log(' user registeration complete !!!!');
 
-            localStorage.setItem("auth_loggedin",true);
+            localStorage.setItem("user_loggedin",true);
             
-            localStorage.setItem('auth_mail',response_json.data.email);
+            localStorage.setItem('user_mail',response_json.data.email);
 
-            localStorage.setItem('auth_profile_url',response_json.data.profile_url);
+            localStorage.setItem('user_profile_url',response_json.data.profile_url);
 
 
             setTimeout(()=>{
 
 
-                show_profile();
+                if(response_json.status==='success'){
 
-                document.getElementById('user_email').innerText = response_json.data.email;
+                show_profile(response_json.data);
 
-                document.getElementById('usr_img').src = response_json.data.profile_url;
+                    window.location.href='products.html';
+                }
+
+                
 
             },800);
 

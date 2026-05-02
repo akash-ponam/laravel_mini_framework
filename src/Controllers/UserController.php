@@ -180,7 +180,11 @@ class UserController {
                         
                             $_SESSION['user_id']  =  $user ['id'];
                             
-                            $_SESSION['is_loggedin']  =  $user ['email'];                        
+                            $_SESSION['is_loggedin']  =  $user ['email'];   
+
+                            $_SESSION['profile_url']  = $user['profile_url'];
+
+
 
 
                         $this->return_json(['email'=>$user['email'],'profile_url' =>$user['profile_url']],201,'login success');

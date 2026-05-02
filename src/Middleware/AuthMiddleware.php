@@ -22,9 +22,6 @@ public function handle(Request $request, Closure $next)
     
             }                
 
-                            /* $_SESSION['user_id']  =  $user ['id']; */
-                            /**/
-                            /* $_SESSION['is_loggedin']  =  $user ['email'];       */
         
     if(!isset($_SESSION['user_id'])  || !isset($_SESSION['is_loggedin']) ) {
 
@@ -33,6 +30,8 @@ public function handle(Request $request, Closure $next)
             exit;   
 
         }
+
+    return $next($request);
 
  }
 

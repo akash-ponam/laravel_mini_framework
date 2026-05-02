@@ -66,18 +66,33 @@ $router = $container->get(Router::class);
 $request = $container->get(Request::class);
 
 
-$router ->get ('/home',function(){
+$router ->get ('/',function(){
 
     
     require __DIR__ .'/index.html';
 
 });
 
-$router->get('/api/products',[ProductController::class,'index']);
+
+$router->get('/add_product',function(){
+
+
+
+    require __DIR__.'/add_product.html';
+
+});
+
+
+
+
+
+
+$router->get('/api/products',[ProductController::class,'index'])->middleware(AuthMiddleware::class);
 
 $router->get('/api/logout',[UserController::class,'logout']);
 
 
+$router->post('/api/add_product',[ProductController::class,'addProduct']);
 
 $router->get('/api/session',[AuthMiddleware::class,'check_session']);
 
