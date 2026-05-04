@@ -295,7 +295,7 @@ user_logout_btn.addEventListener("click",logout);
          <img src="${product.image_url}" >
 
             <h1>${product.name}</h1>
-            <p>${product.price}</p>
+            <p class="product_price" >${product.price}</p>
             
             <button class="add_to_cart_btn" id="btn-${product.product_id}" >${is_in_cart}</button>`;
 
@@ -325,6 +325,8 @@ user_logout_btn.addEventListener("click",logout);
     }
 
 
+    
+    
 
 
 

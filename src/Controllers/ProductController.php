@@ -20,7 +20,37 @@ class ProductController {
 
     public function index(Request $request){
 
-                $result =  $this->db->query("SELECT * FROM products")->fetchAll();
+            
+                
+                $sort_choice = $_GET['sort'] ??'default';
+
+                $sort_options = [
+
+                'price_low' => 'price ASC ',
+            
+                'price_high' => 'price DESC',
+
+                'newest '  => 'created_at DESC',
+
+                'default' => 'created_at ASC' 
+
+
+                ];
+
+
+                $selected_sort_option = $sort_options[$sort_choice]?? $sort_options['default'];
+
+                
+
+
+       
+
+
+
+
+                
+
+                $result =  $this->db->query("SELECT * FROM products ORDER BY $selected_sort_option")->fetchAll();
 
                 return $this->return_json($result,200,'aaya re aaaya rre dekho kaun');
 
@@ -60,6 +90,8 @@ class ProductController {
 
 
         $category = $_POST['category'];
+
+        $price = $_POST['product_price']??null;
 
         $image_path=null;
         
@@ -120,9 +152,9 @@ try {
 
 
                 
-    $add_product_query = " INSERT INTO products(name,product_id,brand,slug,category,image_url) VALUES (?,?,?,?,?,?) ";
+    $add_product_query = " INSERT INTO products(name,product_id,brand,slug,category,image_url,price) VALUES (?,?,?,?,?,?,?) ";
     
-    $this->db->query($add_product_query,[$name,$product_id,$brand,$slug,$category,$image_path]);
+    $this->db->query($add_product_query,[$name,$product_id,$brand,$slug,$category,$image_path, $price]);
  
     $this->return_json(['product_id'=>$product_id],201,'product addition success');
 

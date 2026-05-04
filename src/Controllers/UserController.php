@@ -189,10 +189,16 @@ class UserController {
 
                         $this->return_json(['email'=>$user['email'],'profile_url' =>$user['profile_url']],201,'login success');
 
-                }
+                }else {
 
-
+        
+                    
                 $this->error_response('unathorised access',401);
+            
+    
+            }
+
+
 
 
 
