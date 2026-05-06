@@ -16,8 +16,21 @@ body{
 
     grid-template-rows: auto;
 
-    grid-template-columns: auto;
+    grid-template-columns: minmax(100vh,1fr);
 
+    gap: 1rem;
+
+    position: relative;
+
+
+}
+
+.active_page {
+
+
+    transform: scale(1.15);
+
+    border: 0.5rem solid blue;
     
 
 
@@ -25,22 +38,211 @@ body{
 
 }
 
-.wrapper_scroll {
+
+
+.wrapper_fp {
 
     display: flex;
 
-    padding-inline: 1rem;
+}
 
-    width: 100%;
+
+
+
+
+
+.filter_sort_wrapper {
+
+    width: 100vw;
+    
+    height: 8rem ;
+
+    display: flex;
+
+    padding: 0.5rem;
+
+    border: 0.125rem solid lime;
+
+    align-items: center;
 
     position: relative;
 
-    top: 35%;
+    justify-content: space-around;
+    
 
-    left: 15%;
+}
+
+.pagination_wrapper {
+
+    flex:0 0 300px;
+
+    height: 6rem;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    border: 0.0125rem dotted brown;
+
+    position: absolute;
+
+    left: 50%;
+
+    width: 300px;
+
+    column-gap: 0.5rem;
+
+    padding: 0.25rem;
+
+}
+
+.page_num {
+
+width: 2rem;
+
+height: 2rem;
+
+background-color: green;
+
+color:white;
+
+font-size: 1.5rem;
+
+text-align:centre;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+cursor: pointer;
+
+transition: all 200ms ease-in-out;
+
+border: none;
+
+padding: 0.125rem;
 
 
-  
+
+
+}
+
+
+.per_page_wrapper {
+
+
+    display:  flex;
+
+    border: 0.0075rem solid pink;
+
+    padding: 1.5rem;
+
+    height: max-content;
+
+    column-gap: 1rem;
+
+
+
+
+
+
+
+}
+
+
+
+
+.sort_wrapper {
+
+    flex-grow: 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    padding: 0.125rem;
+
+    border: 0.0075rem solid brown;
+
+    height: 6rem;
+
+    width: 500px;
+
+    align-items: center;
+
+    column-gap: 2rem;
+
+}
+
+
+
+
+
+.sort_icon {
+
+    width: 1rem;
+
+    height: 1rem;
+
+    aspect-ratio: 1 /1 ;
+
+    object-fit: cover;
+
+    background: url('../uploads/sort.png');
+
+
+
+}
+
+
+
+
+.sort_chip {
+
+    
+    border-radius: 10%;
+    
+    background-color: #DFF1F1;
+
+    color: black;
+
+    display: flex;
+
+    text-align: center;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding-inline: 2rem;
+
+    padding-block: 0.5rem;
+
+    font-style: bold;
+
+    cursor: pointer;
+
+    transition: all 200ms ease-in-out ;
+
+}
+
+.active_sort_option {
+
+    background-color: green;
+    color: white;
+
+}
+
+
+.sort_chip:hover{
+
+    background-color: mediumpurple;
+    color: white;
+
 }
 
 
@@ -143,27 +345,13 @@ body{
 
 
     position: relative;
-  
-    scroll-padding-inline: calc(50% - 150px);
+    
+    display: grid;
 
-    transform-style: preserve-3d;
 
-    /* border: 0.25rem solid brown; */
+    grid-template-columns: repeat(3,minmax(250px,1fr));
 
-    display: flex;
-
-    overflow-x:auto;
-
-    flex-wrap: nowrap;
-
-    /* justify-content: flex-start; */
-
-    scroll-behavior: smooth;
-
-    scroll-snap-type: x mandatory;
-
-    gap:2rem;
-
+    
 
     width: 100%;
 
@@ -173,7 +361,7 @@ body{
 
     -webkit-overflow-scrolling: touch;
     
-    /* align-items: center; */
+   
 
 
 
@@ -236,48 +424,48 @@ body{
 
 
 
-.product-grid::before,
-
-.product-grid::after {
-
-position: static;
-
-content: '';
-
-width:  calc(50vw - 150px);
-
-height:inherit;
-
-flex-shrink: 0;
-
-flex-grow: 0;
-
-
-/* border: 0.025rem dotted blue; */
-
-
-
-
-}
-
-
-.product-grid::before {
-
-
-    margin-left: calc(50% - 150px);
-
-
-}
-
-
-.product-grid::after {
-
-
-    margin-right: calc(50% - 150px);
-
-
-
-}
+/* .product-grid::before, */
+/**/
+/* .product-grid::after { */
+/**/
+/* position: static; */
+/**/
+/* content: ''; */
+/**/
+/* width:  calc(50vw - 150px); */
+/**/
+/* height:inherit; */
+/**/
+/* flex-shrink: 0; */
+/**/
+/* flex-grow: 0; */
+/**/
+/**/
+/* /* border: 0.025rem dotted blue; */ */
+/**/
+/**/
+/**/
+/**/
+/* } */
+/**/
+/**/
+/* .product-grid::before { */
+/**/
+/**/
+/*     margin-left: calc(50% - 150px); */
+/**/
+/**/
+/* } */
+/**/
+/**/
+/* .product-grid::after { */
+/**/
+/**/
+/*     margin-right: calc(50% - 150px); */
+/**/
+/**/
+/**/
+/* } */
 
 
 
@@ -601,9 +789,11 @@ flex-grow: 0;
 
     position: absolute;
 
-    left:1rem;
+    
 
-    bottom: 2rem;
+    bottom: 0.25rem;
+
+    right: 0.25rem;
 
     background-color: goldenrod;
 
@@ -613,14 +803,8 @@ flex-grow: 0;
 
     padding: 0.25rem;
 
-    border-radius: 50%;
+    border-radius: 10%;
 
     corner-shape: shimmer;
-
-    
-    
-    
-
-
 
 }

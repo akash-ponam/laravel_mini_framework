@@ -2,71 +2,102 @@
 document.addEventListener("DOMContentLoaded",()=>{
 
 
-    const prev_button = document.querySelector('.prev');
+    const url_params = {
+        page:1,
+        per_page:10,
+        sort:'price_asc'
+
+    }
 
 
-    const next_button  = document.querySelector('.next');
+
+    const per_page_input = document.querySelector('.per_page_input');
 
 
+
+
+
+
+    var products_meta = [];
+
+    const pagination_wrapper = document.querySelector('.pagination_wrapper');
+
+
+
+
+
+
+    // const prev_button = document.querySelector('.prev');
+    //
+    //
+    // const next_button  = document.querySelector('.next');
 
 
 
     const grid_ref = document.getElementById('product-grid');
 
+
+
     var products_cards  =  [];
-
-
-
-
-
-
 
     const observer_options = {root:grid_ref ,threshold:0.7};
 
-    console.log('dunno wtf is going on ');
+    var being_sorted = false;
+
+    const btn_asc = document.querySelector('#price_asc');
 
 
-    //
-    // const observer  = new IntersectionObserver((enteries) =>{
-    //
-    //
-    //     enteries.forEach(e => {
-    //
-    //
-    //     console.log("Observer target:", e.target);
-    //     console.log("Is it intersecting?", e.isIntersecting);
-    //     console.log("How much is visible?", e.intersectionRatio);
-    //
-    //         if(e.isIntersecting){
-    //
-    //             e.target.classList.add("active");
-    //             console.log("its on centre lol");
-    //         }else{
-    //             e.target.classList.remove("active");
-    //         }
-    //
-    //
-    //     } );
-    // },observer_options
-    //
-    // );
-    //
+    console.log('id of asc btn ',btn_asc.id);
 
-    //
-    // const setup_observer =()=> {
-    //
-    //
-    //
-    //
-    // products_cards.forEach(card => observer.observe(card));
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    // }
+
+
+
+    btn_asc.classList.add("active_sort_option");
+
+
+
+
+    const btn_desc  =  document.getElementById('price_desc');
+
+
+    const handle_sort = (e) =>{
+
+
+        e.preventDefault();
+
+
+        url_params.sort= e.target.id==='price_asc'? 'price_asc':'price_desc';
+
+        if(url_params.sort=='price_asc'){
+
+        btn_asc.classList.add("active_sort_option");
+        
+        btn_desc.classList.remove("active_sort_option");
+        
+        }else {
+
+    
+            btn_desc.classList.add("active_sort_option");
+
+
+            btn_asc.classList.remove("active_sort_option");
+
+
+
+        }
+
+
+
+        fetch_data();
+
+    };
+
+    btn_asc.addEventListener("click",handle_sort);
+
+    btn_desc.addEventListener("click",handle_sort);
+
+
+
 
 
 
@@ -87,28 +118,25 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 
-
-
-
     }
 
 
-    prev_button.addEventListener("click",(e)=>{
-
-
-        scrollProducts(-1);
-
-    })
-
-
-    next_button.addEventListener('click',(e)=>{
-
-
-    
-        scrollProducts(1);
-
-
-    })
+    // prev_button.addEventListener("click",(e)=>{
+    //
+    //
+    //     scrollProducts(-1);
+    //
+    // })
+    //
+    //
+    // next_button.addEventListener('click',(e)=>{
+    //
+    //
+    //
+    //     scrollProducts(1);
+    //
+    //
+    // })
 
 
 
@@ -325,17 +353,118 @@ user_logout_btn.addEventListener("click",logout);
     }
 
 
-    
+const setup_page_nav = () =>{
+
+
+    per_page_input.addEventListener('input',(e)=>{
+
+
+        const min_Value =parseFloat(e.target.min);
+
+
+        
+
+
+        if(e.target.value.length > 0 ){
+
+
+            url_params.per_page=e.target.value;
+
+
+
+        }
+
+        else {
+
+
+            url_params.per_page=10;
+
+
+
+        }
+
+
+
+
+    })
+
+
+
+
+
+    pagination_wrapper.addEventListener("click",(e) => {
+
+
+        const page_btn = e.target.closest('.page_num');
+
+
+        if(!page_btn){
+            return;
+        }
+
+        const page_number = page_btn.id.split('-')[1];
+
+        console.log('pagen umber is ',page_number);
+
+
+
+
+        url_params.page=page_number;
+
+
+        fetch_data();
+        
+
+
+
+
+
+
+    })
+
+
+
+
+
+}
+
+
+const render_page_num = (page_number) => {
+
+    const active_class = ((page_number) == url_params.page)?'active_page':'';
+
+
+    return `<div class ="page_num ${active_class}" id="page-${page_number}"> <p> ${page_number} </p>  </div>`;
+
+
+
+
+}
+
+
+const highlight_current_page = () =>{
+
+
+ const active_page_button =    document.getElementById(`page-${url_params.page}`);
+
+    console.log('ACTIVE PAGE BUTTON ID ',active_page_button.id);
+
+}
     
 
 
 
     const fetch_data = async() => {
 
+
+        grid_ref.innerHTML='';
+
+        pagination_wrapper.innerHTML='';
             
         try {
 
-        const http_response =  await fetch("/api/products");
+            const http_response =  await fetch(`/api/products?page=${url_params.page}&per_page=${url_params.per_page}&sort=${url_params.sort}`);
+
 
             const json_response = await  http_response.json();
 
@@ -345,9 +474,25 @@ user_logout_btn.addEventListener("click",logout);
 
                     console.log('data is ',json_response.data);
 
-                    products =  json_response.data;
+                    products =  json_response.data.data;
 
-                    console.log('inside fetch products is ',products);
+                    products_meta = json_response.data.meta;
+
+                    for (let i = 0; i < products_meta.total_page; i++) {
+
+                        // let active_class = ((i+1) == url_params.page)?'active_page':'';
+                        //
+                        //
+                        // pagination_wrapper.innerHTML += `<div class ="page_num ${active_class}" id="page-${i+1}"> <p> ${i+1} </p>  </div>`;
+
+                        pagination_wrapper.innerHTML += render_page_num(i+1);
+
+                    }
+
+
+
+
+                    // console.log('inside fetch products is ',products);
 
                     products.map((p) => {
                         
@@ -409,6 +554,7 @@ user_logout_btn.addEventListener("click",logout);
 
 
 
+        highlight_current_page();
 
     }
 
@@ -504,5 +650,9 @@ document.addEventListener('ProductsFetched',(e) => {
 
 
 })
+
+
+
+setup_page_nav();
 
 });

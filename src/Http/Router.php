@@ -23,7 +23,19 @@ class Router {
 
     public function get($uri,$callback){
 
-    $this->routes['GET'][$uri] = ['callback'=>$callback,'middlewares' => [] ];
+    
+    $pattern = preg_replace('/\{[a-zA-Z0-9_]+\}','([a-zA-Z0-9_-]+)',$uri);
+
+    
+    $full_url = "#^" . $pattern . "$#" ; 
+
+
+
+    /* $this->routes['GET'][$uri] = ['callback'=>$callback,'middlewares' => [] ]; */
+
+
+    $this->routes['GET'][$full_url] = ['callback'=>$callback,'middlewares'=> [] ] ;
+
 
         
     return $this;

@@ -24,11 +24,21 @@ class ProductController {
                 
                 $sort_choice = $_GET['sort'] ??'default';
 
+                $page_number = $_GET['page']??1;
+
+                $per_page = $_GET['per_page']??10;
+
+                $offset = ($page_number -1) * $per_page;
+
+                
+    
+
+
                 $sort_options = [
 
-                'price_low' => 'price ASC ',
+                'price_asc' => 'price ASC ',
             
-                'price_high' => 'price DESC',
+                'price_desc' => 'price DESC',
 
                 'newest '  => 'created_at DESC',
 
@@ -41,18 +51,11 @@ class ProductController {
                 $selected_sort_option = $sort_options[$sort_choice]?? $sort_options['default'];
 
                 
+                $total_records  = $this->db->query("SELECT COUNT(*) FROM products ")->fetchColumn();          
 
+                $result =  $this->db->query("SELECT * FROM products ORDER BY $selected_sort_option LIMIT $per_page OFFSET $offset")->fetchAll();
 
-       
-
-
-
-
-                
-
-                $result =  $this->db->query("SELECT * FROM products ORDER BY $selected_sort_option")->fetchAll();
-
-                return $this->return_json($result,200,'aaya re aaaya rre dekho kaun');
+                return $this->return_json(['data'=>$result,'meta' =>[ 'total_records' =>(int)$total_records,'current_page'=>$page_number,'per_page'=>$per_page,'total_page' =>ceil($total_records /$per_page )  ]],200,'aaya re aaaya rre dekho kaun');
 
 
 
