@@ -64,10 +64,42 @@ class ProductController {
 
     }
 
-    public function show(){
+    public function show($id){
+
+        $query = null;
+
+        $result = null;
+
+
+        try {
+
+        $query = "SELECT * FROM products where product_id = ?";
+
+        $result = $this->db->query($query,[$id])->fetch();
+
+
+            if(!$result){
+            
+                
+            return $this->error_response("error while retrieving product ",500);
+
+    
+            }
+        
+            return $this->return_json(['data'=>$result],200,'retrivel success');
+        
+            
+        } catch (\Exception $e) {
+
+            return $this->error_response($e->getMessage(),404);
+
+            
+        }
 
         
-                return "<h1> Single product info </h1>";
+        
+
+
 
 
     }

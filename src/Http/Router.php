@@ -24,7 +24,7 @@ class Router {
     public function get($uri,$callback){
 
     
-    $pattern = preg_replace('/\{[a-zA-Z0-9_]+\}','([a-zA-Z0-9_-]+)',$uri);
+    $pattern = preg_replace('/\{[a-zA-Z0-9_]+\}/','([a-zA-Z0-9_-]+)',$uri);
 
     
     $full_url = "#^" . $pattern . "$#" ; 
@@ -45,7 +45,22 @@ class Router {
 
     public function post($uri,$callback){
 
-    $this->routes['POST'][$uri] = ['callback'=>$callback,'middlewares' => [] ];
+    /* $this->routes['POST'][$uri] = ['callback'=>$callback,'middlewares' => [] ]; */
+
+    
+    
+    $pattern = preg_replace('/\{[a-zA-Z0-9_]+\}/','([a-zA-Z0-9_-]+)',$uri);
+
+    
+    $full_url = "#^" . $pattern . "$#" ; 
+
+
+
+    /* $this->routes['GET'][$uri] = ['callback'=>$callback,'middlewares' => [] ]; */
+
+
+    $this->routes['POST'][$full_url] = ['callback'=>$callback,'middlewares'=> [] ] ;
+
 
         
     return $this;
@@ -83,127 +98,149 @@ class Router {
     public function resolve($uri,$method) {
 
 
-        $route_info  = $this->routes[$method][$uri]?? null;
+        $route_info = null;
 
-        if(!$route_info){
-            
-                http_response_code(404);
-                return " 404  not found";
+        $captured_params = [];
+
+        foreach($this->routes[$method] as $pattern => $info) {
+
+        if(preg_match($pattern,$uri,$matches)){
+
+        $route_info = $info;
+
+        array_shift($matches);
+
+        $captured_params = $matches;
+
+        break;
 
         }
 
 
-        $callback = $route_info['callback'];
 
-        $middlewares =  $route_info['middlewares']??[];
+    }
+
+    if(!$route_info){
+
+        http_response_code(400);
+        
+        return "404 not found";
+    
+    
+    }
 
 
-        $core_action = function()  use ($callback) {
+    $callback = $route_info['callback'];
+    
+    $middlewares = $route_info['middlewares']??[];
+
+    $core_action  = function() use ($callback,$captured_params){
 
         if(is_callable($callback)){
-            
 
-            return call_user_func($callback);
+            return call_user_func_array($callback,$captured_params);
 
 
         }
 
-
         if(is_array($callback)){
-
-        [$class,$method_name]  =  $callback;
+    
+        [$class,$method_name] = $callback;
 
         $controller = $this->container->get($class);
 
         $reflection_method = new \ReflectionMethod($controller,$method_name);
 
-        $params = $reflection_method->getParameters();
+        $parameters = $reflection_method->getParameters();
 
         $dependencies = [];
 
-        
-        foreach ($params as $param) {
+        foreach ($parameters as $param) {
 
-        
-            $type= $param->getType();
+        $type =  $param->getType();
 
-            if($type && !$type->isBuiltin()){
+        if($type  && !$type->isBuiltin()){
 
-                $type_name = $type->getName();
-                
-                $dependencies[] = $this->container->get($type_name);
-                
-            }
+            
+            $dependencies[] = $this->container->get($type->getName());
+
+        }else{
+
+                // normal parmeter type 
+
+                $dependencies[] = array_shift($captured_params);
+
+
+        }
+    
 
 
 
         }
+
 
         return $reflection_method->invokeArgs($controller,$dependencies);
-        }
 
-
-            return "Invalid callback";
-
-    };
         
 
-    $pipeline = array_reduce(
-    
-    array_reverse($middlewares), // array passed 
-    function($next_layer,$middlware_class){ // reducer 
-    
-        return function() use ($next_layer,$middlware_class){
-
-        $middle_ware_instance = $this->container->get($middlware_class);
-
-        return $middle_ware_instance->handle($this->container->get(Request::class),$next_layer
-
-
-        ); 
-
+        
     
 
-
-    };
-            
-},
-
-                    
-                
-
-
-
-
-    $core_action  // initial layer 
-
-
-
-
-
-    );
-
-
-
-    $response = $pipeline();
-
-    if(is_array($response) || is_object($response) ) {
-    
-    header('Content-Type: application/json');
-
-    echo json_encode($response);
-
-    return;
 
 
     }
-        
-    return $response;
 
+
+    return " invalid callback logic";
+
+
+    
+
+    }; //end of core action logic 
+
+
+    $pipeline = array_reduce(array_reverse($middlewares), 
+
+    function ($next_layer, $middleware_class) {
+
+    return function()   use ($next_layer,$middleware_class) {
+
+
+        $instance = $this->container->get($middleware_class);
+
+        return $instance->handle($this->container->get(Request::class),$next_layer);
+
+
+};
 
 
 
 }
+
+
+   ,$core_action);
+
+$response = $pipeline();
+
+
+if(is_array($response) || is_object($response)) {
+
+
+    
+ header('Content-Type: application/json');
+
+echo json_encode($response);
+
+return;
+
+
+}
+
+
+    return $response; 
+        
+
+} 
 
 
 

@@ -85,7 +85,7 @@ $router->get('/add_product',function(){
 
 
 
-
+$router->get('/api/products/{id}',[ProductController::class,'show']);
 
 $router->get('/api/products',[ProductController::class,'index'])->middleware(AuthMiddleware::class);
 
