@@ -205,7 +205,7 @@ try {
 
                 show_profile(response_json.data);
 
-                    window.location.href='products.html';
+                    window.location.href='/products';
                 }
 
                 

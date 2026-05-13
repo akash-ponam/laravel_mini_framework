@@ -11,20 +11,37 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 
+    const search_results_container =  document.querySelector('.search_results_container');
+
+
+
+    const search_box_container = document.querySelector('.search_container');
+
+    const search_product_input = document.querySelector('.search_product_input');
+
+    const search_box_coords = search_box_container.getBoundingClientRect();
+
+    const search_box_height = search_box_coords.height;
+
+    const search_box_left = search_box_coords.left;
+
+    const search_box_top = search_box_coords.top;
+
+    search_results_container.style.position = 'absolute';
+
+    search_results_container.style.top= search_box_top+ search_box_height;
+
+    search_results_container.style.left = search_box_left;
+
+
+    search_results_container.classList.add('hidden');
+
     const per_page_input = document.querySelector('.per_page_input');
-
-
-
-
 
 
     var products_meta = [];
 
     const pagination_wrapper = document.querySelector('.pagination_wrapper');
-
-
-
-
 
 
     // const prev_button = document.querySelector('.prev');
@@ -35,6 +52,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
     const grid_ref = document.getElementById('product-grid');
+
+    
 
 
 
@@ -49,13 +68,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     console.log('id of asc btn ',btn_asc.id);
 
-
-
-
     btn_asc.classList.add("active_sort_option");
-
-
-
 
     const btn_desc  =  document.getElementById('price_desc');
 
@@ -119,6 +132,135 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
     }
+
+
+    const render_search_results = (results) =>{
+
+        search_results_container.innerHTML='';
+
+        
+       results.forEach(result => {
+        
+ 
+
+        const item = document.createElement('div');
+
+        item.classList.add("item");
+
+        const a = document.createElement('a');
+
+        a.classList.add("potato");
+
+        a.href = `/products/${result.product_id}`;
+
+        a.innerText=result.name;
+
+        item.appendChild(a);
+
+        search_results_container.appendChild(item);
+
+
+
+
+       });
+
+  
+
+
+
+
+
+
+
+    }
+
+
+
+
+    const handle_query = (query ,delay ) => {
+
+
+        setTimeout( async ()=>{
+
+            const http_response = await fetch(`/api/query_product?search=${query}`);
+
+            if(http_response.ok){
+
+
+                search_results_container.style.display='block';
+
+                const json_response = await http_response.json();
+
+                const search_results = json_response.data;
+
+                // console.log(" searched results are ",search_results);
+
+                render_search_results(search_results);
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        },delay)
+
+
+
+    }
+
+
+
+    const handle_search = (e) =>{
+
+            
+
+        console.log(
+            
+            "value is " ,e.target.value
+        )
+
+    
+        if(e.target.value===""){
+
+            search_results_container.style.display='none';
+
+
+        } else {
+
+
+
+            handle_query(e.target.value,500);
+
+        }
+
+
+
+
+
+
+    }
+
+
+
+    function setup_search() {
+
+
+        search_product_input.addEventListener("input",handle_search);
+
+
+
+
+    }
+
+
+
 
 
     // prev_button.addEventListener("click",(e)=>{
@@ -273,23 +415,23 @@ user_logout_btn.addEventListener("click",logout);
         if(cart.includes(product)){
 
             cart.pop();
+
+            document.querySelector(`#btn-${product.product_id}`).innerText="ADD TO CART";
             
             update_cart_info();
 
-            btn.innerText="ADD TO CART";
 
 
         }else{
 
 
             cart.push(product);
-
-            update_cart_info();
-
             
-            btn.innerText="REMOVE FROM CART";
 
 
+            document.querySelector(`#btn-${product.product_id}`).innerText="REMOVE FROM CART";
+
+             update_cart_info();
            
 
 
@@ -312,7 +454,8 @@ user_logout_btn.addEventListener("click",logout);
 
         
         const is_in_cart = cart.includes(product)?"REMOVE FROM CART":"ADD TO CART";
-       
+
+        const existing_card = document.querySelector(`#${product.product_id}`);      
 
         const new_product_card = document.createElement('div');
 
@@ -507,6 +650,8 @@ const highlight_current_page = () =>{
 
                             const id = e.target.id.replace('btn-','');
 
+                            console.log(`button ${e.target.id} clicked ` );
+
                             const product_ref = products.find(p=>p.product_id == id);
 
                             add_to_cart(product_ref,e.target);
@@ -514,7 +659,7 @@ const highlight_current_page = () =>{
                         }
 
 
-
+                    
 
 
 
@@ -595,6 +740,8 @@ document.addEventListener('keydown', (event) => {
 
         profile_options_menu.style.display='none';
 
+        console.log(" search input content s ",search_product_input.value);
+
     }
 
 
@@ -654,5 +801,5 @@ document.addEventListener('ProductsFetched',(e) => {
 
 
 setup_page_nav();
-
+setup_search();
 });

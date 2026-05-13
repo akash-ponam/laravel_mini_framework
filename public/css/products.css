@@ -5,6 +5,92 @@ html{
 
 }
 
+:root {
+
+
+    --search-bar-width:30vw;
+
+    --search-bar-padding:1rem;
+
+    
+
+
+}
+
+
+.search_results_container {
+
+    display: flex;
+
+    width: var(--search-bar-width);
+
+    height: max-content;
+
+    justify-content: start;
+
+    background-color: white;
+
+    box-shadow: 8px 6px  15px black;
+
+    z-index: 20;
+
+}
+
+.hidden {
+
+    display: none;
+
+
+
+}
+
+.item{
+
+    background-color: white;
+
+    color: black;
+
+    padding: 0.25rem;
+
+    cursor: pointer;
+}
+
+
+.potato {
+
+text-decoration: none;
+
+padding: 0.25rem;
+
+
+
+
+}
+
+
+.item:hover{
+
+    background-color: blueviolet;
+
+    color: white;
+
+
+
+
+
+}
+
+a {
+
+    color: black;
+}
+
+a:hover {
+
+    color: white;
+}
+
+
 
 body{
 
@@ -482,20 +568,78 @@ padding: 0.125rem;
     background-color:#575;
     color: white;
 
-    position: static;
+    position: relative;
 
     top: 0;
 
     left: 0;
 
+    z-index: 1;
    
 
+}
 
 
+
+    
+.search_container {
+
+
+    position: relative;
+
+    width: var(--search-bar-width);
+
+    padding: var(--search-bar-padding);
+
+    left: calc(60% - var(--search-bar-width));
+    
+    top: 25%;
+
+}
+
+
+.search_product_input  {
+
+
+    padding: var(--search-bar-padding);
+
+    width: 100%;
+
+    border-radius: 1rem;
 
 
 
 }
+
+
+.search_product_button {
+
+    background: url('../uploads/search.png');
+
+    background-size: contain;
+
+    background-repeat: no-repeat;
+
+    width: 40px;
+
+    height: 60px;
+
+    position: absolute;
+
+    top: 25%;
+
+    right: 0.075rem;
+
+    border: none;
+
+}
+
+
+
+
+
+
+
 
 .profile_card {
 
@@ -523,6 +667,10 @@ padding: 0.125rem;
     overflow: hidden;
 
     cursor: pointer;
+
+    z-index: 4;
+
+
 }
 
 

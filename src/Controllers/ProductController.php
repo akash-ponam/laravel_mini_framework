@@ -64,6 +64,58 @@ class ProductController {
 
     }
 
+
+
+
+    public function search() {
+
+
+        $user_search_input = $_GET['search'] ?? '';
+
+        $search_query = "SELECT product_id,name from products WHERE name LIKE ? ";
+
+        $formatted_search_input = "%". $user_search_input ."%";
+    
+        try {
+
+
+
+        $result = $this->db->query($search_query,[$formatted_search_input])->fetchAll();
+
+        if($result){
+
+        
+            $this->return_json($result,201,"search query success!");
+
+        }else {
+
+
+            $this->error_response("not any related data found",404);
+
+
+        }
+
+
+        } catch (\Exception $e) {
+
+            
+            
+            
+            $this->error_response($e->getMessage(),500);
+
+
+
+            
+        }
+
+
+}
+
+
+
+
+
+
     public function show($id){
 
         $query = null;

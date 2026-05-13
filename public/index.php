@@ -83,14 +83,34 @@ $router->get('/add_product',function(){
 });
 
 
+$router->get('/products/{id}', function(){
 
+
+    
+    require __DIR__ .'/product_detail.html';
+
+
+
+});
+
+$router->get('/products',function(){
+
+    
+    require __DIR__ .'/products.html';
+
+
+
+});
+
+
+
+$router->get('/api/query_product',[ProductController::class,'search']);
 
 $router->get('/api/products/{id}',[ProductController::class,'show']);
 
 $router->get('/api/products',[ProductController::class,'index'])->middleware(AuthMiddleware::class);
 
 $router->get('/api/logout',[UserController::class,'logout']);
-
 
 $router->post('/api/add_product',[ProductController::class,'addProduct']);
 

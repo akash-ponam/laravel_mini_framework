@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Combo&display=swap');
+
+
+html {
+
+font-size: 16px;
+
+}
+
+body {
+
+    display:flex;
+
+    flex-direction:column;
+
+    width: 100vw;
+
+    height: 100vh;
+
+    justify-content: center;
+
+    align-items: center;
+
+
+}
+
+.product_detail {
+
+    position: relative;
+
+    width: 60%;
+
+    height: 50%;
+
+
+    border-radius: 1rem;
+
+
+    border: 0.125rem solid gray;
+
+    padding: 1rem;
+
+
+    cursor: pointer;  
+        
+    overflow: hidden;
+
+    display: grid;
+
+    grid-template-rows: repeat(3,1fr);
+
+    grid-template-columns: repeat(2,1fr);
+
+
+
+}
+
+
+.product_title {
+  font-family: "Combo", system-ui;
+  font-weight: 900;
+  font-style: normal;
+  font-size: 4rem;
+}
+
+
+.product_price::before {
+
+    content: "$";
+
+
+}
+
+
+
+.product_price {
+
+    grid-row: 3 /4;
+
+    grid-column: 2 /3;
+
+    background-color: lightgray;
+
+    color: black;
+
+    font-style: bold;
+
+    font-size: 6rem;
+
+    margin-bottom: 1rem;
+
+
+
+}
+
+
+
+
+.product_img {
+
+   
+    width: 400px;
+
+
+    height: 400px;
+
+
+    grid-row: 1 / 4;
+
+    grid-column: 1 /2;
+
+
+    aspect-ratio: 3 / 4;
+    
+    object-fit: cover;
+
+    flex-shrink: 0;
+
+
+}
+
+
+
+.product_detail::before {
+content:"";
+position: absolute;
+
+top: 0;
+
+left: -150%;
+
+width: 100%;
+
+height: 100%;
+
+
+
+background:#57C785;
+
+ animation: shimmer 1s infinite;
+
+
+}
+
+.product_detail.loaded::before {
+
+    display: none;
+
+}
+
+
+
+
+
+
+@keyframes shimmer {
+
+0% {
+
+left:-150%;
+
+}
+
+100% {
+
+left:150%;
+
+}
+
+
+}

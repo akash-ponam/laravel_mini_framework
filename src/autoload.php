@@ -1,5 +1,6 @@
 <?php 
 
+
 spl_autoload_register(function ($class){
 
 $prefix = 'App\\';                // namespace App\Controllers  class App\Controllers\UserController
