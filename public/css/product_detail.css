@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Combo&display=swap');
 
+/* *{ */
+/*     margin: 0; */
+/*     padding: 0; */
+/* } */
 
 html {
 
@@ -60,7 +64,18 @@ body {
   font-family: "Combo", system-ui;
   font-weight: 900;
   font-style: normal;
-  font-size: 4rem;
+  font-size: 3rem;
+
+  color: white;
+
+  position: absolute;
+
+  left: 1rem;
+
+  bottom: 8rem;
+
+  z-index: 3;
+
 }
 
 
@@ -75,11 +90,19 @@ body {
 
 .product_price {
 
-    grid-row: 3 /4;
+    z-index: 3;
 
-    grid-column: 2 /3;
+    position: absolute;
 
-    background-color: lightgray;
+    left: 1rem;
+
+    bottom: 1rem;
+ 
+    /* background: black; */
+
+    width:max-content;
+
+    text-align: start;
 
     color: black;
 
@@ -87,34 +110,59 @@ body {
 
     font-size: 6rem;
 
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem;  */
 
+   stroke-opacity: 0.5;
 
 
 }
 
 
 
+.info_wrapper {
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: 0;
+
+    height: max-content;
+
+    width: 100%;
+
+    background-color: black;
+
+    color: white;
+
+
+
+}
+
 
 .product_img {
 
    
-    width: 400px;
+    position: absolute;
 
 
-    height: 400px;
+    width: 100%;
+
+    height: 100%;
 
 
-    grid-row: 1 / 4;
+    aspect-ratio: 16 / 9  ;
 
-    grid-column: 1 /2;
-
-
-    aspect-ratio: 3 / 4;
+    /* aspect-ratio: 3 / 4; */
     
-    object-fit: cover;
+    object-fit:cover;
 
-    flex-shrink: 0;
+    object-position: 30% 10%;
+
+    z-index: 2;
+
+
+
 
 
 }

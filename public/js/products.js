@@ -2,6 +2,10 @@
 document.addEventListener("DOMContentLoaded",()=>{
 
 
+    var cart = [];
+
+    var comparable_items = [];
+
     const url_params = {
         page:1,
         per_page:10,
@@ -11,9 +15,40 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 
+
+    const close_comparison_button =  document.querySelector('.close_dialog');
+
+    
+    close_comparison_button.addEventListener("click",(e)=> {
+
+        
+        // e.preventDefault();
+        
+    comparison_area.classList.remove('is-visible');
+
+
+
+    })
+
+
+
+
+    
+    const comparison_area = document.querySelector('.comparison_area');
+
+    const button_comparison = document.querySelector('.button_comparison');
+
+    button_comparison.classList.add('hidden');
+
+
+
+    comparison_area.classList.remove('is-visible');
+
+
+    // comparison_area.style.display='none';
+
+
     const search_results_container =  document.querySelector('.search_results_container');
-
-
 
     const search_box_container = document.querySelector('.search_container');
 
@@ -227,7 +262,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         )
 
     
-        if(e.target.value===""){
+        if(e.target.value.length==0){
 
             search_results_container.style.display='none';
 
@@ -294,7 +329,6 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 
-    var cart = [];
 
 
     const quantity_info = document.querySelector('.quantity');
@@ -411,40 +445,32 @@ user_logout_btn.addEventListener("click",logout);
 
     const add_to_cart = (product,btn) => {
 
-    
-        if(cart.includes(product)){
+        const product_index = cart.findIndex( item => item.product_id === product.product_id);
 
-            cart.pop();
+        if(product_index!=-1){ 
 
-            document.querySelector(`#btn-${product.product_id}`).innerText="ADD TO CART";
-            
-            update_cart_info();
+
+            cart.splice(product_index,1);
 
 
 
-        }else{
-
-
-            cart.push(product);
-            
-
-
-            document.querySelector(`#btn-${product.product_id}`).innerText="REMOVE FROM CART";
-
-             update_cart_info();
-           
-
-
-
+            console.log(' item exists remving item  cart is ',cart);
 
         }
-          
-        
+
+        else{
+
+            cart.push({product_id:product.product_id,product_url : product.image_url});
+
+        }
 
 
+        console.log('current cart is ',cart);
 
 
-    }
+      
+
+    };
 
 
 
@@ -452,12 +478,63 @@ user_logout_btn.addEventListener("click",logout);
     const render_product = (product) => {
 
 
+        var default_text = "ADD TO CART";
         
-        const is_in_cart = cart.includes(product)?"REMOVE FROM CART":"ADD TO CART";
 
-        const existing_card = document.querySelector(`#${product.product_id}`);      
+
+        const is_in_cart = cart.some(item => item.product_id=== product.product_id);
+
+        if(is_in_cart){
+
+            default_text="REMOVE FROM CART";
+
+
+
+        }
+
+        const existing_card = document.querySelector(`#card-${product.product_id}`);
+
+        if(existing_card){
+
+
+            console.log(' render phase product is ',product);
+            console.log(' yup card already exists');
+
+
+
+            const btn_cart = existing_card.querySelector(`#btn-${product.product_id}`);
+
+
+            if(btn_cart) {
+
+                console.log('button exists');
+
+            }
+
+
+
+
+            btn_cart.innerText = default_text;
+
+            return ;
+
+
+
+        }
+
+        
+
 
         const new_product_card = document.createElement('div');
+
+        // new_product_card.classList.add(`card-${product.product-id}`);
+
+
+
+        new_product_card.id = `card-${product.product_id}`;
+
+
+
 
         new_product_card.classList.add("product-card");
 
@@ -468,11 +545,14 @@ user_logout_btn.addEventListener("click",logout);
             <h1>${product.name}</h1>
             <p class="product_price" >${product.price}</p>
             
-            <button class="add_to_cart_btn" id="btn-${product.product_id}" >${is_in_cart}</button>`;
+            <button class="add_to_cart_btn" id="btn-${product.product_id}" >${default_text}</button>
+
+            <button class ="btn-compare" >COMPARE </button>`;
+
+            
 
 
-
-        products_cards.push(new_product_card);
+            // products_cards.push(new_product_card);
 
             return new_product_card;
 
@@ -497,7 +577,6 @@ user_logout_btn.addEventListener("click",logout);
 
 
 const setup_page_nav = () =>{
-
 
     per_page_input.addEventListener('input',(e)=>{
 
@@ -590,14 +669,87 @@ const highlight_current_page = () =>{
 
  const active_page_button =    document.getElementById(`page-${url_params.page}`);
 
-    console.log('ACTIVE PAGE BUTTON ID ',active_page_button.id);
 
+}
+
+
+function add_to_compare(product) {
+    // 1. Check if the item is already in the list
+    const index = comparable_items.findIndex(p => p.product_id == product.product_id);
+
+
+
+
+
+
+
+    
+    if (index !== -1) {
+        console.log("Item already added to comparison.");
+        comparison_area.classList.add('is-visible');
+        return; // Exit early so we don't add duplicates
+    }
+
+    if(comparable_items.length >=2){
+
+        button_comparison.classList.remove('hidden');
+    }
+
+
+
+    // 2. Check if we are about to exceed the limit (max 3 items)
+    if (comparable_items.length >= 3) {
+        console.log("HIT THE COMPARISON SIZE LIMIT");
+        console.log('Final comparison list:', comparable_items);
+        alert("You can only compare up to 3 items!"); // Optional user alert
+         // Exit early
+    }
+
+    // 3. If it passes both checks, safely push to array
+    if(comparable_items.length<3){
+
+    comparable_items.push(product);
+
+ 
+
+    // 4. Create and append the new item element to the DOM
+    const comparable_item = document.createElement('div');
+    comparable_item.classList.add("comparable_item");
+    comparable_item.innerHTML = `
+        <img src="${product.image_url}" alt="${product.title || 'Product'}">
+    
+        `;
+    comparison_area.appendChild(comparable_item)
+
+    ;
+
+}
+
+    
+
+    // 5. Show the bar ONLY after we successfully added an item
+    if (comparable_items.length > 0) {
+        comparison_area.classList.add('is-visible');
+    }else{
+    
+        comparison_area.classList.remove('is-visible');
+
+        
+
+    }
+
+    
+
+    
 }
     
 
 
 
     const fetch_data = async() => {
+
+        console.log('cart at this point is ',cart);
+
 
 
         grid_ref.innerHTML='';
@@ -648,23 +800,41 @@ const highlight_current_page = () =>{
 
                         if(e.target.classList.contains('add_to_cart_btn')){
 
+
+                            // e.stopPropagation();
+
                             const id = e.target.id.replace('btn-','');
 
-                            console.log(`button ${e.target.id} clicked ` );
 
                             const product_ref = products.find(p=>p.product_id == id);
 
+                            console.log(`button ${e.target.id} clicked ` );
+
+
                             add_to_cart(product_ref,e.target);
+
+                            return;
 
                         }
 
 
-                    
 
+                        const compare_btn  = e.target.closest('.btn-compare');
 
+                        if(!compare_btn){
 
+                            return;
 
+                            
+                        }
 
+                        const id = e.target.parentElement.id.replace('card-','');
+
+                        const target_product = products.find(p=>p.product_id == id);
+
+                        console.log('product is ', target_product );
+
+                        add_to_compare(target_product);
 
                     })
 
@@ -733,7 +903,7 @@ profile_card.addEventListener("click",(e)=>{
 
 document.addEventListener('keydown', (event) => {
   if(event.key === 'Escape') {
-    console.log('Escape key was pressed!');
+    // console.log('Escape key was pressed!');
   
      if(profile_options_menu.style.display=='block'){
 
@@ -744,6 +914,7 @@ document.addEventListener('keydown', (event) => {
 
     }
 
+    comparison_area.classList.remove('is-visible');
 
 
   }
