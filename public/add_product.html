@@ -30,7 +30,6 @@
                 <option >ESports</option>
                 <option > L-Kidas </option>
                 <option >E-wears</option>
-
                 <option>Tesla</option>
 
             </select>
@@ -49,6 +48,19 @@
 
              </select>
 
+
+            <textarea id="specs" class="specs" name="specs" rows="9" placeholder='{"colors": ["red", "blue"], "sizes": ["M", "L"]}'> 
+            </textarea>
+
+
+            <button id="openDialogBtn"class="add_features">ADD FEATURES </button>
+
+
+
+            
+            <p id="json_error" style="color: red; display: none;">INVALID JSON FORMAT</p>
+            
+
             <input type="file" name="product_image" accept="image/*" id="product_image_id"  >
 
             <input type="number" name="product_price" required>
@@ -56,6 +68,25 @@
             <button type="submit" id="btn_add_product">ADD PRODUCT</button>
           
         </form>
+
+
+    <dialog id="specsDialog" style="border: 1px solid #ccc; border-radius: 8px; padding: 20px; width: 400px;">
+    <h3>Add Product Specifications</h3>
+    
+    <!-- Container where key/value rows will be added dynamically -->
+    <div id="pairsContainer">
+        <!-- Rows look like: [Key Input] : [Value Input] [Delete Button] -->
+    </div>
+
+    <br>
+    <button type="button" id="addPairBtn">+ Add New Row</button>
+    <hr>
+    <button type="button" id="saveSpecsBtn">Save & Apply</button>
+    <button type="button" id="closeDialogBtn">Cancel</button>
+</dialog>
+
+
+
     
     
 

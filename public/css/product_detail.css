@@ -32,9 +32,9 @@ body {
 
     position: relative;
 
-    width: 60%;
+    width: 70vw;
 
-    height: 50%;
+    height: 80vh;
 
 
     border-radius: 1rem;
@@ -42,19 +42,20 @@ body {
 
     border: 0.125rem solid gray;
 
-    padding: 1rem;
+    /* padding: 1rem; */
 
 
     cursor: pointer;  
         
-    overflow: hidden;
+    /* overflow: hidden; */
 
-    display: grid;
+    /* display: grid; */
+    /**/
+    /* grid-template-rows: repeat(3,1fr); */
+    /**/
+    /* grid-template-columns: repeat(2,1fr); */
 
-    grid-template-rows: repeat(3,1fr);
-
-    grid-template-columns: repeat(2,1fr);
-
+    display: flex;
 
 
 }
@@ -75,6 +76,64 @@ body {
   bottom: 8rem;
 
   z-index: 3;
+
+}
+
+
+.specs_list {
+
+width: 25vw;
+
+height: 25vh;
+
+height: max-content;
+
+display: flex;
+
+justify-items: center;
+
+justify-content: center;
+
+flex-direction: column;
+
+list-style-type: square;
+
+background-color: white;
+
+color: black;
+
+position: absolute;
+
+z-index: 3;
+
+top: 0;
+
+left: 0;
+
+}
+
+
+.hor_style{
+
+    display: flex;
+
+    justify-content:space-evenly;
+
+    flex-direction: row;
+
+    border: 0.125rem solid gray;
+
+    align-items: center;
+
+
+
+
+}
+
+label {
+
+    font-style: bold;
+    font-weight: 900;
 
 }
 
@@ -159,7 +218,7 @@ body {
 
     object-position: 30% 10%;
 
-    z-index: 2;
+    z-index: -1;
 
 
 

@@ -12,7 +12,48 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 
+    const append_specs = (root,list,title) =>{
+
+    
+    const wrapper = document.createElement('div');
+
+    wrapper.classList.add('hor_style');
+
+    const label = document.createElement('label');
+    
+    label.innerText= title;
+
+    wrapper.classList.add('hor_style');
+
+    wrapper.appendChild(label);
+
+    list.forEach(item => {
+
+        const p = document.createElement('p');
+
+        p.innerText = item;
+
+        wrapper.appendChild(p);
+
+    });
+
+    
+    root.appendChild(wrapper);
+
+
+    
+
+
+
+
+    }
+
+
+
+
     const render_product = (root,product) =>{
+
+        console.log('PRODUCT TYPE IS ' , typeof product);
 
         const product_img = document.createElement('img');
 
@@ -20,6 +61,27 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         const price = document.createElement('button');
 
+        const specs_list = document.createElement('li');
+
+        specs_list.classList.add('specs_list');
+
+        if(product.specs) {
+
+        console.log('specs are ',product.specs);
+
+        const parsed_specs = JSON.parse(product.specs);
+
+        
+        
+        append_specs(specs_list,parsed_specs.color,'COLOR');
+
+        root.appendChild(specs_list);
+    
+
+
+        }
+
+       
         price.classList.add("product_price");
 
         price.innerText= product.price;
@@ -36,7 +98,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         root.appendChild(product_title);
 
-        root.appendChild(price);
+         root.appendChild(price);
+
 
 
 

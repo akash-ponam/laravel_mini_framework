@@ -156,16 +156,10 @@ class ProductController {
 
     }
 
+  public function addProduct() {
 
 
-    public function addProduct() {
-
-
-
-            
-    
-
-
+        $specs = $_POST['specs'];
     
         $name  = $_POST['name'];
 
@@ -181,25 +175,7 @@ class ProductController {
         $price = $_POST['product_price']??null;
 
         $image_path=null;
-        
-        error_log('name is '.$name);
-
-        error_log('product id is '.$product_id);
-
-        error_log('barnd is '.$brand);
-
-        error_log('slug is '.$slug);
-
-        error_log('category id is '.$category);
-
-
-        
-
-
-
-
-
-
+    
         if(isset($_FILES['product_image']['name'])  && !empty($_FILES['product_image']['name'])){
 
         
@@ -215,13 +191,20 @@ class ProductController {
                 if(move_uploaded_file($_FILES['product_image']['tmp_name'],$file_with_path )) {
 
 
-                $image_path = '/uploads/'.$file_name;
+                    $image_path = '/uploads/'.$file_name;
+
+                    error_clear_last();
+
+                    error_log('image path found '.$image_path);
 
 
 
             }else {
 
-            error_log("IMAGE UPLOAD LOGIC FAILED");
+                    error_log("IMAGE UPLOAD LOGIC FAILED");
+
+
+                    error_log('image path found after upload fail '.$image_path);
             $this->error_response('uploading image failed !!!',500);
 
     }
@@ -239,18 +222,14 @@ try {
 
 
                 
-    $add_product_query = " INSERT INTO products(name,product_id,brand,slug,category,image_url,price) VALUES (?,?,?,?,?,?,?) ";
+    $add_product_query = " INSERT INTO products(name,product_id,brand,slug,category,image_url,price,specs) VALUES (?,?,?,?,?,?,?,?) ";
     
-    $this->db->query($add_product_query,[$name,$product_id,$brand,$slug,$category,$image_path, $price]);
+    $this->db->query($add_product_query,[$name,$product_id,$brand,$slug,$category,$image_path, $price , $specs ]);
  
-    $this->return_json(['product_id'=>$product_id],201,'product addition success');
+                $this->return_json(['product_id'=>$product_id],201,'product addition success');
 
 
-
-
-
-
-    
+   
 } catch (\Exception $e) {
 
 
@@ -258,13 +237,6 @@ $this->error_response($e->getMessage(),500);
 
 
 }
-
-
-
-
-
-
-
 
 }else{
 

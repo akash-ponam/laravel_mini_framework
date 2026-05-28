@@ -1,4 +1,7 @@
 
+import { MyDialog } from "./components/MyDialog.js";
+
+
 document.addEventListener("DOMContentLoaded",()=>{
 
 
@@ -12,11 +15,33 @@ document.addEventListener("DOMContentLoaded",()=>{
         sort:'price_asc'
 
     }
+ 
 
-
-
+    
 
     const close_comparison_button =  document.querySelector('.close_dialog');
+
+
+    const clear_all_button  = document.querySelector('.clear_all');
+
+
+    clear_all_button.addEventListener("click",(e)=>{
+
+        console.log('clear button clicked');
+    
+        comparable_items = [];
+
+        console.log(' items cleared ',comparable_items);
+
+        comparison_area.replaceChildren(button_comparison,close_comparison_button,clear_all_button);
+
+        button_comparison.classList.add('hidden');
+
+
+        comparison_area.classList.remove('is-visible');
+
+
+})
 
     
     close_comparison_button.addEventListener("click",(e)=> {
@@ -27,21 +52,92 @@ document.addEventListener("DOMContentLoaded",()=>{
     comparison_area.classList.remove('is-visible');
 
 
+  //   const deleteAlert = new MyDialog({
+  //   title: 'Warning!',
+  //   message: 'Are you sure you want to delete this product? This cannot be undone.',
+  //   confirmText: 'Yes, Delete',
+  //   type: 'modal', // Blocks user interaction
+  //   onConfirm: () => {
+  //     console.log('Product deleted from database.');
+  //     // your actual delete logic here
+  //   }
+  // });
+  //
+  // deleteAlert.show();
+
+
+
+
+
 
     })
 
 
+function checkCommonAttribute(arr, prop) {
+  // 1. Extract the specific property values from all objects
+  const values = arr.map(obj => obj[prop] );
 
+    console.log('VALUES INPUT ARE  ',values);
+  
+  // 2. Put them in a Set to get only the unique values
+  const uniqueValues = new Set(values);
 
     
+    console.log('UNIOUE VALUES',uniqueValues);
+    
+  
+  // // 3. Check the size of the set to determine the output
+  // if (uniqueValues.size === 1) {
+  //   return 0; // All have the exact same value
+  // } else {
+  //   return uniqueValues.size; // Returns 2 if two are different, or 3 if all three are different
+  // }
+//
+//
+return uniqueValues.size;
+}
+
+
+
+        
     const comparison_area = document.querySelector('.comparison_area');
 
     const button_comparison = document.querySelector('.button_comparison');
 
+    if(!button_comparison){
+
+    console.log(' no comparison button was found');
+
+        
+    }
+    
+    button_comparison.addEventListener("click",(e)=>{
+
+    console.log("BUTTON COMPARISON CLICKED");
+        
+    const res = checkCommonAttribute(comparable_items,'category')
+
+    if(res > 1 ){
+
+        show_dialog('MISMATCH COMPARISON','items from different Category not comparable');
+
+        
+        comparable_items =[];
+
+    
+        comparison_area.replaceChildren(button_comparison,close_comparison_button,clear_all_button);
+        
+                
+        comparison_area.classList.remove('is-visible');
+     
+    }
+
+
+    });
+
     button_comparison.classList.add('hidden');
-
-
-
+ 
+    
     comparison_area.classList.remove('is-visible');
 
 
@@ -403,7 +499,7 @@ user_logout_btn.addEventListener("click",logout);
 
 
 
-    render_profile = () => {
+    const render_profile = () => {
 
         const image_src  = localStorage.getItem('user_profile_url');
         console.log('image src is ',image_src);
@@ -475,21 +571,19 @@ user_logout_btn.addEventListener("click",logout);
 
 
 
-    const render_product = (product) => {
+    
+
+
+        const render_product = (product) => {
 
 
         var default_text = "ADD TO CART";
-        
-
-
+    
         const is_in_cart = cart.some(item => item.product_id=== product.product_id);
 
         if(is_in_cart){
 
             default_text="REMOVE FROM CART";
-
-
-
         }
 
         const existing_card = document.querySelector(`#card-${product.product_id}`);
@@ -544,7 +638,10 @@ user_logout_btn.addEventListener("click",logout);
 
             <h1>${product.name}</h1>
             <p class="product_price" >${product.price}</p>
-            
+
+            <p class ="product_category"> ${product.category}</p>
+ 
+
             <button class="add_to_cart_btn" id="btn-${product.product_id}" >${default_text}</button>
 
             <button class ="btn-compare" >COMPARE </button>`;
@@ -672,48 +769,43 @@ const highlight_current_page = () =>{
 
 }
 
+const show_dialog = (title,message) =>{
 
-function add_to_compare(product) {
-    // 1. Check if the item is already in the list
-    const index = comparable_items.findIndex(p => p.product_id == product.product_id);
-
-
-
-
-
-
-
-    
-    if (index !== -1) {
-        console.log("Item already added to comparison.");
-        comparison_area.classList.add('is-visible');
-        return; // Exit early so we don't add duplicates
+    const deleteAlert = new MyDialog({
+    title: title+"!",
+    message: message,
+    confirmText: 'Ok',
+    type: 'modal', // Blocks user interaction
+    onConfirm: () => {
+      console.log('Product deleted from database.');
+      // your actual delete logic here
     }
+  });
 
-    if(comparable_items.length >=2){
-
-        button_comparison.classList.remove('hidden');
-    }
+  deleteAlert.show();
 
 
+}
 
-    // 2. Check if we are about to exceed the limit (max 3 items)
-    if (comparable_items.length >= 3) {
-        console.log("HIT THE COMPARISON SIZE LIMIT");
-        console.log('Final comparison list:', comparable_items);
-        alert("You can only compare up to 3 items!"); // Optional user alert
-         // Exit early
-    }
 
-    // 3. If it passes both checks, safely push to array
-    if(comparable_items.length<3){
+const render_comparable_item = (product) => {
+
 
     comparable_items.push(product);
 
- 
+    comparison_area.classList.add('is-visible');
 
-    // 4. Create and append the new item element to the DOM
+    if(comparable_items.length>=2){
+
+        button_comparison.classList.remove('hidden');
+
+    }
+
+    console.log('so far comparable items',comparable_items);
+
+       // 4. Create and append the new item element to the DOM
     const comparable_item = document.createElement('div');
+    comparable_item.id = 'cmp-'+product.product_id;
     comparable_item.classList.add("comparable_item");
     comparable_item.innerHTML = `
         <img src="${product.image_url}" alt="${product.title || 'Product'}">
@@ -723,22 +815,51 @@ function add_to_compare(product) {
 
     ;
 
+
+
+
+
+
+
+
+
 }
 
-    
 
-    // 5. Show the bar ONLY after we successfully added an item
-    if (comparable_items.length > 0) {
-        comparison_area.classList.add('is-visible');
-    }else{
-    
-        comparison_area.classList.remove('is-visible');
 
+
+
+
+
+
+
+
+
+
+function add_to_compare(product) {
+    // 1. Check if the item is already in the list
+    const index = comparable_items.findIndex(p => p.product_id == product.product_id);   
+    if (index !== -1) {
+        console.log("Item already added to comparison.");
         
+        show_dialog('already added','product already added to comparison');
+
+        // comparison_area.classList.add('is-visible');
+        return; // Exit early so we don't add duplicates
+    }
+
+    // new item to be added sine it does not exist  yet 
+
+    if(comparable_items.length==3){
+
+        show_dialog('LIMIT REACHED',"You can compare max 3 items");
+        return;
 
     }
 
+    render_comparable_item(product);
     
+
 
     
 }
@@ -748,9 +869,11 @@ function add_to_compare(product) {
 
     const fetch_data = async() => {
 
+        comparable_items =[];
+
+        
+
         console.log('cart at this point is ',cart);
-
-
 
         grid_ref.innerHTML='';
 

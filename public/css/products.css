@@ -12,9 +12,6 @@ html{
 
     --search-bar-padding:1rem;
 
-    
-
-
 }
 
 
@@ -338,15 +335,13 @@ padding: 0.125rem;
 
     position: absolute;
 
-    width: 6rem;
+    width: max-content;
 
-    height: 6rem;
+    height: max-content;
 
-    top: 0.5rem;
+    top: 2.5rem;
 
     right: 12rem;
-
-    padding: 0.25rem;
 
     cursor: pointer;
 
@@ -364,11 +359,13 @@ padding: 0.125rem;
 
     /* border-radius: 50%; */
 
-    max-width: 100%;
+    width: 3rem;
 
-    height: auto;
+    height: 3rem;
 
     object-fit: contain;
+
+    color: white;
 
     
 
@@ -435,7 +432,7 @@ padding: 0.125rem;
     display: grid;
 
 
-    grid-template-columns: repeat(3,minmax(350px,1fr));
+    grid-template-columns: repeat(3,minmax(500px,1fr));
 
     
 
@@ -524,6 +521,22 @@ padding: 0.125rem;
 
 }
 
+.clear_all{
+
+position: absolute;
+
+top: 1rem;
+
+right: 16rem;
+
+width: max-content;
+
+padding: 1rem;
+
+
+
+}
+
 
 .close_dialog {
 
@@ -593,7 +606,7 @@ padding: 0.125rem;
 
 padding: 1.5rem;
 
-pointer-events: none;
+/* pointer-events: none; */
 
 }
 
@@ -618,7 +631,7 @@ pointer-events: none;
     color: white;
 
 
-    font-weight: 300;
+    font-weight: 200;
 
 
     font-size: 4rem;
@@ -1093,13 +1106,25 @@ height: 15rem;
 }
 
 
+.product_category{
+
+
+    position: relative;
+
+    color: slategray;
+
+    top: 0.5%;
+
+    font-size: 1.75rem;
+
+}
+
+
 
 .product_price {
 
     position: absolute;
-
-    
-
+ 
     bottom: 0.75rem;
 
     right: 0.25rem;
