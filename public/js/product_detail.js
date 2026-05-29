@@ -14,6 +14,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     const append_specs = (root,list,title) =>{
 
+    console.log('TYPE OF LIST IS ',typeof list);
+
+
     
     const wrapper = document.createElement('div');
 
@@ -38,12 +41,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     });
 
     
-    root.appendChild(wrapper);
-
-
-    
-
-
+root.appendChild(wrapper);
 
 
     }
@@ -67,18 +65,19 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         if(product.specs) {
 
-        console.log('specs are ',product.specs);
+console.log('specs are of type ',typeof product.specs);
 
-        const parsed_specs = JSON.parse(product.specs);
+console.log()
+    
 
-        
-        
-        append_specs(specs_list,parsed_specs.color,'COLOR');
+        // const parsed_specs = JSON.parse(product.specs);
+
+        console.log('color are of type', typeof product.specs.color);
+           
+        append_specs(specs_list,product.specs.color,'COLOR');
 
         root.appendChild(specs_list);
     
-
-
         }
 
        
@@ -122,22 +121,17 @@ document.addEventListener("DOMContentLoaded",()=>{
 
             container.classList.add('loaded');
 
-            
-
             const product = response_json.data.data; 
 
             render_product(container,product);
 
             console.log('product is ',product);
-            
-
-
-
+       
         }
             
 
         } catch (error) {
-            console.log(error);
+            console.log( error);
         }
         
 

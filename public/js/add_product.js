@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     
     // Delete row event
     row.querySelector('.remove-btn').addEventListener('click', () => row.remove());
+
     container.appendChild(row);
 
 

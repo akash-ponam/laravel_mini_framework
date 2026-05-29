@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded",()=>{
  
 
     
+    const dialog_container =  document.querySelector(".compare_dialog") ;
 
     const close_comparison_button =  document.querySelector('.close_dialog');
 
@@ -130,7 +131,11 @@ return uniqueValues.size;
                 
         comparison_area.classList.remove('is-visible');
      
+        return;
     }
+
+
+    open_comparison_dialog();
 
 
     });
@@ -263,6 +268,193 @@ return uniqueValues.size;
 
 
     }
+
+
+
+    function open_comparison_dialog() {
+
+    if(comparable_items.length<=1){
+        
+        show_dialog('COMPARE ','ADD MORE ITEMS TO COMPARE LIST');
+
+        return;
+
+    }
+
+    dialog_container.innerHTML="";
+
+    const current_category = comparable_items[0].category;
+
+    console.log('comparison is being done in category ',current_category);
+
+    let matrix_html = " ";
+
+    // switch (current_category.toLowerCase()) {
+    //     case 'outerwear':
+    //
+    //         matrix_html = compare_clothes(comparable_items);
+    //
+    //         break;
+    //
+    //     case 'cars':
+    //
+    //         matrix_html = compare_clothes(comparable_items);
+    //
+    //         break;
+    //
+    //
+    //     default:
+    //
+    //         matrix_html = `comparison layout for ${current_category} is not implemented yet`;
+    //
+    //         break;
+    // }
+
+    matrix_html = compare_clothes(comparable_items);
+
+    dialog_container.innerHTML= matrix_html;
+
+document.querySelector('.close_btn').addEventListener("click",()=>{
+
+
+dialog_container.classList.add("hidden");
+
+
+})
+
+
+
+
+
+
+    dialog_container.classList.remove("hidden");
+
+
+        
+
+
+}
+
+
+function compare_clothes(clothes) {
+
+const all_attributes = [];
+
+clothes.forEach((cloth)=> {
+    
+            if(cloth.specs){
+            
+
+            all_attributes.push(...Object.keys(cloth.specs));
+
+        }
+
+
+
+
+
+
+});
+
+
+const unique_attributes = [...new Set(all_attributes)];
+
+let html = ` <div class ="modal_content">
+
+    <span class="close_btn">X</span>
+
+    <h2>Category comparison :Clothes </h2>
+
+    <table class="comparison_table">
+
+    <thead>
+        <tr>
+
+        <th>Specifications </th>
+
+`;
+
+clothes.forEach(cloth =>{
+
+    html+=`<th>${cloth.name}</th>`;
+    
+
+})
+
+html+=`</tr> 
+</thead>
+
+<tbody>
+
+`;
+
+unique_attributes.forEach( attr =>{
+
+html+=`<tr>`;
+
+html+=`<td><strong>${attr.toUpperCase()}</strong>`;
+
+
+clothes.forEach( cloth => {
+
+    if(cloth.specs && cloth.specs[attr]){
+
+        const value  = cloth.specs[attr];
+
+        html += `<td>${Array.isArray(value)?value.join(', '):value} </td>`;
+
+
+
+    }else{
+        
+        html+=`<td> - </td>`;
+
+    }
+    
+
+
+
+});
+
+html+=`</tr>`;
+
+
+
+
+
+});
+
+html = html + `</tbody> 
+</table>
+
+</div>
+
+`;
+
+
+return html;
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     const render_search_results = (results) =>{
@@ -1034,6 +1226,8 @@ document.addEventListener('keydown', (event) => {
         profile_options_menu.style.display='none';
 
         console.log(" search input content s ",search_product_input.value);
+
+        dialog_container.classList.add("hidden");
 
     }
 

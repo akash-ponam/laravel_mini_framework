@@ -53,9 +53,31 @@ class ProductController {
                 
                 $total_records  = $this->db->query("SELECT COUNT(*) FROM products ")->fetchColumn();          
 
-                $result =  $this->db->query("SELECT * FROM products ORDER BY $selected_sort_option LIMIT $per_page OFFSET $offset")->fetchAll();
+                $products =  $this->db->query("SELECT * FROM products ORDER BY $selected_sort_option LIMIT $per_page OFFSET $offset")->fetchAll();
 
-                return $this->return_json(['data'=>$result,'meta' =>[ 'total_records' =>(int)$total_records,'current_page'=>$page_number,'per_page'=>$per_page,'total_page' =>ceil($total_records /$per_page )  ]],200,'aaya re aaaya rre dekho kaun');
+                foreach($products as &$product){
+
+
+                if(isset($product['specs']) && is_string($product['specs']) ) {
+
+            
+                    $product['specs']  =  json_decode($product['specs'],true);
+
+
+            }
+
+
+                 unset($product);
+
+                
+                    
+
+
+
+                }
+
+
+                return $this->return_json(['data'=>$products,'meta' =>[ 'total_records' =>(int)$total_records,'current_page'=>$page_number,'per_page'=>$per_page,'total_page' =>ceil($total_records /$per_page )  ]],200,'aaya re aaaya rre dekho kaun');
 
 
 
@@ -127,18 +149,27 @@ class ProductController {
 
         $query = "SELECT * FROM products where product_id = ?";
 
-        $result = $this->db->query($query,[$id])->fetch();
+        $product = $this->db->query($query,[$id])->fetch();
 
 
-            if(!$result){
+            if(!$product){
             
                 
             return $this->error_response("error while retrieving product ",500);
 
     
             }
+
+            if($product && isset($product['specs']) && is_string($product['specs']) ) {
+
+
+                
+                $product['specs'] = json_decode($product['specs'],true);
+
+
+            }
         
-            return $this->return_json(['data'=>$result],200,'retrivel success');
+            return $this->return_json(['data'=>$product],200,'retrivel success');
         
             
         } catch (\Exception $e) {
