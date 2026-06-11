@@ -66,6 +66,8 @@ const login_btn_text = document.getElementById('login_btn_text');
     document.getElementById('user_email').innerText = user.email;
 
     document.getElementById('usr_img').src = user.profile_url;
+
+    document.getElementById()
         
 
     }
@@ -78,7 +80,7 @@ const login_btn_text = document.getElementById('login_btn_text');
     register_view.style.display='none';
     login_view.style.display='none';
 
-    document.getElementById('user_email').innerText = localStorage.getItem('auth_mail');
+    document.getElementById('user_email').innerText = localStorage.getItem('auth_mail') +" bla bla";
 
     document.getElementById('usr_img').src = localStorage.getItem('auth_profile_url');
 

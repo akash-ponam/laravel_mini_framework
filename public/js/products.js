@@ -2,11 +2,13 @@
 import { MyDialog } from "./components/MyDialog.js";
 
 
+
+
 document.addEventListener("DOMContentLoaded",()=>{
 
 
-    var cart = [];
 
+    var cart_id = null
     var comparable_items = [];
 
     const url_params = {
@@ -16,6 +18,16 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     }
  
+
+
+    const cart = document.querySelector('.cart_icon_wrapper');
+
+    cart.addEventListener("click",()=>{
+
+        window.location.href=`/carts/${cart_id}`;
+
+
+    })
 
     
     const dialog_container =  document.querySelector(".compare_dialog") ;
@@ -712,51 +724,161 @@ user_logout_btn.addEventListener("click",logout);
     }
 
 
-    const update_cart_info = () => {
+                        
+                        
+
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve,ms))
 
 
 
-            if(cart.length>0){
-                quantity_info.style.display='block';
-                quantity_info.innerText=cart.length;
-            }else {
-
-                quantity_info.style.display='none';
-
-            }
 
 
+const fire_cart_logic = async (product_id,quantity,delay) =>{
+
+
+    
+
+try{     await sleep(delay);
+
+const payload = {
+
+product_id:product_id,
+quantity:quantity
+
+
+};
+
+
+const http_response = await fetch('/api/add_to_cart',{method:"POST",
+
+headers:{
+"Content-Type": "application/json"
+},
+
+body:JSON.stringify(payload)});
+
+if(http_response.ok){
+
+
+const res = await http_response.json();
+
+return res;
+
+
+
+}else {
+
+
+return null;
+
+} }
+catch(error){
+
+console.log("ERROR OCCURED ",error);
+
+}
+
+
+};
+
+
+const update_cart_info = (new_size) => {
+
+
+
+quantity_info.innerText = new_size;
+
+if(new_size>0){
+
+quantity_info.classList.remove("hide");
+
+}else {
+
+quantity_info.classList.add("hide");
+
+}
+
+}
+
+
+const  get_cart_info = async() => {
+
+
+try {
+    
+    const http_response =  await fetch('/api/cart_info');
+
+    if(http_response.ok){
+
+        
+        const json_response = await http_response.json();
+
+        const cart_length = json_response.data.cart_length;
+
+        update_cart_info(cart_length);
 
 
     }
 
 
-    const add_to_cart = (product,btn) => {
-
-        const product_index = cart.findIndex( item => item.product_id === product.product_id);
-
-        if(product_index!=-1){ 
-
-
-            cart.splice(product_index,1);
 
 
 
-            console.log(' item exists remving item  cart is ',cart);
-
-        }
-
-        else{
-
-            cart.push({product_id:product.product_id,product_url : product.image_url});
-
-        }
+} catch (error) {
 
 
-        console.log('current cart is ',cart);
+
+console.log(" ERROR WHILE FETCHIN CART INFO",error);
+    
+}
 
 
-      
+
+
+
+
+
+}
+
+
+
+
+
+const add_to_cart = async(product_id,quantity) => {
+
+        
+const output = await fire_cart_logic(product_id,quantity,500);
+
+if(output){
+    
+const productID = output.data.product_id;
+
+const cart_length = output.data.cart_length;
+
+cart_id = output.data.cart_id;
+
+update_cart_info(cart_length);
+
+
+console.log('product id:',productID,'cart length:',cart_length);
+
+
+
+
+
+
+
+
+
+
+}else {
+
+
+console.log('null was returneda');
+
+}
+
+
 
     };
 
@@ -771,12 +893,7 @@ user_logout_btn.addEventListener("click",logout);
 
         var default_text = "ADD TO CART";
     
-        const is_in_cart = cart.some(item => item.product_id=== product.product_id);
-
-        if(is_in_cart){
-
-            default_text="REMOVE FROM CART";
-        }
+      
 
         const existing_card = document.querySelector(`#card-${product.product_id}`);
 
@@ -836,8 +953,19 @@ user_logout_btn.addEventListener("click",logout);
 
             <button class="add_to_cart_btn" id="btn-${product.product_id}" >${default_text}</button>
 
-            <button class ="btn-compare" >COMPARE </button>`;
+            <button class ="btn-compare" >COMPARE </button>
 
+            <div class="amount_wrapper" >
+
+            <button class ="amount_changer"> - </button>
+
+            <input type="number" min="0" />
+
+            <button class = "amount_changer"> + </button>
+
+
+            </div>
+`;
             
 
 
@@ -1126,7 +1254,7 @@ function add_to_compare(product) {
                             console.log(`button ${e.target.id} clicked ` );
 
 
-                            add_to_cart(product_ref,e.target);
+                            add_to_cart(product_ref.product_id,1);
 
                             return;
 
@@ -1280,7 +1408,8 @@ document.addEventListener('ProductsFetched',(e) => {
     console.log('data fetch succcess ');
 
 
-
+    
+     get_cart_info();
 
 
 

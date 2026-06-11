@@ -436,11 +436,24 @@ padding: 0.125rem;
 
     height: max-content;
 
-    top: 2.5rem;
+    border-radius: 50%;
+
+    top: 1.08rem;
 
     right: 12rem;
 
     cursor: pointer;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    border: 0.005rem solid black;
+
+    padding: 1rem;
+    background-color: white;
 
 }
 
@@ -456,15 +469,14 @@ padding: 0.125rem;
 
     /* border-radius: 50%; */
 
-    width: 3rem;
+    width:3rem;
 
-    height: 3rem;
+    height:3rem;
 
     object-fit: contain;
 
     color: white;
 
-    
 
 
 
@@ -477,16 +489,65 @@ padding: 0.125rem;
     color: white;
     background-color: red;
     position: absolute;
-    top: 0;
+    top: -2rem;
     right: 0;
     font-size: 2rem;
     padding: 0.0125rem;
     padding-inline: 0.525rem;
     border-radius: 50%;
-    display: none;
+    /* display: block; */
 
 }
 
+.amount_wrapper {
+
+    width: max-content;
+
+    height:  max-content;
+
+    display: flex;
+
+    position: absolute;
+
+    bottom: 5.5rem;
+
+    right: 0;
+
+    border-collapse: collapse;
+
+    border: 0.075rem solid blue;
+
+}
+
+.amount_wrapper > amount_changer {
+
+    background-color: purple;
+
+    font-style: bold;
+
+    flex-grow: 0;
+
+    flex-shrink: 1;
+    
+    width: 6rem;
+
+    padding-inline: 1rem;
+
+    padding-block: 0.5rem;
+
+    font-size: 2rem;
+
+}
+
+.amount_wrapper > input {
+
+
+    width:8rem;
+    text-align: right;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+
+}
 
 
 
@@ -957,7 +1018,12 @@ height: 15rem;
 }
 
 
+.hide {
 
+
+    display: none;
+
+}
 
 
 

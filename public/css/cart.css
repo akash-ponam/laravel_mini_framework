@@ -1,0 +1,105 @@
+html {
+
+
+    font-size: 16px;
+
+
+}
+
+
+table {
+
+
+    border-spacing: 1rem;
+}
+
+
+thead {
+
+
+    border-bottom: 0.025rem solid black;
+
+}
+
+
+
+th {
+
+
+    text-transform: uppercase;
+
+    padding-bottom: 0.5rem;
+
+    border-bottom: 0.25rem solid black ;
+
+
+}
+
+
+td {
+
+    text-align: center;
+}
+
+
+button {
+
+    color:red;
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-style: bold;
+
+}
+
+tr {
+    background-color: lightyellow;
+}
+
+.cart_wrapper {
+
+    width: max-content;
+
+    box-sizing: content-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    position: relative;
+    
+    gap: 4rem;
+
+
+
+
+}
+
+
+.place_order_button{
+
+
+    background-color: green;
+
+    color: white;
+
+    padding: 0.5rem;
+
+   
+
+    display: block;
+
+    margin-top: 2.5rem;
+
+    cursor: pointer;
+
+
+
+}
+
+.hidden {
+
+
+    display: none;
+
+
+}

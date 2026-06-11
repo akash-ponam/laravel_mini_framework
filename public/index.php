@@ -103,6 +103,15 @@ $router->get('/products',function(){
 });
 
 
+$router->get('/carts/{id}',function(){
+
+
+    require __DIR__ .'/cart.html';
+
+
+});
+
+
 
 $router->get('/api/query_product',[ProductController::class,'search']);
 
@@ -114,6 +123,10 @@ $router->get('/api/logout',[UserController::class,'logout']);
 
 $router->post('/api/add_product',[ProductController::class,'addProduct']);
 
+
+
+$router->post('/api/add_to_cart',[ProductController::class,'add_to_cart']);
+
 $router->get('/api/session',[AuthMiddleware::class,'check_session']);
 
 
@@ -124,6 +137,21 @@ $router->post('/api/login',[UserController::class,'login']);
 
 
 $router->get('/api/user',[UserController::class,'getUser']);
+
+
+$router->get('/api/cart_info',[ProductController::class,'cart_info']);
+
+
+$router->delete('/api/carts/delete/{cart_id}/{product_id}',[ProductController::class,'remove_from_cart']);
+
+
+$router->get('/api/carts/{id}',[ProductController::class,'cart']);
+
+$router->post('/api/place_order',[ProductController::class,'place_order']);
+
+$router->get('/api/get_orders',[ProductController::class,'get_orders']);
+
+$router->get('/api/orders/{order_id}',[ProductController::class,'order_details']);
 
 
 echo $router->resolve($request->url(),$request->method());
