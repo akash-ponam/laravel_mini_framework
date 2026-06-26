@@ -112,6 +112,24 @@ $router->get('/carts/{id}',function(){
 });
 
 
+$router->get('/my_orders',function() {
+
+
+    require __DIR__ .'/my_orders.html';
+    
+
+});
+
+$router->get('/my_orders/{order_id}',function(){
+
+
+    require __DIR__ .'/order_details.html';
+
+
+
+});
+
+
 
 $router->get('/api/query_product',[ProductController::class,'search']);
 
@@ -147,9 +165,9 @@ $router->delete('/api/carts/delete/{cart_id}/{product_id}',[ProductController::c
 
 $router->get('/api/carts/{id}',[ProductController::class,'cart']);
 
-$router->post('/api/place_order',[ProductController::class,'place_order']);
+$router->get('/api/place_order',[ProductController::class,'place_order']);
 
-$router->get('/api/get_orders',[ProductController::class,'get_orders']);
+$router->get('/api/orders',[ProductController::class,'get_orders']);
 
 $router->get('/api/orders/{order_id}',[ProductController::class,'order_details']);
 

@@ -29,6 +29,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     })
 
+
+   
+
     
     const dialog_container =  document.querySelector(".compare_dialog") ;
 
@@ -710,10 +713,14 @@ user_logout_btn.addEventListener("click",logout);
         if(image_src && profile_card){
 
         console.log('found profile card reference');
-        profile_card.innerHTML=`<img src ="${image_src}" alt="profile" >`;
+
+      
+            profile_card.innerHTML=`<img src ="${image_src}" alt="profile" > 
+
+                ` ;
 
 
-         user_info.innerText=localStorage.getItem('user_mail');   
+        user_info.innerText=localStorage.getItem('user_mail');   
 
         }
 

@@ -180,7 +180,7 @@ class UserController {
                         
                             $_SESSION['user_id']  =  $user ['id'];
                             
-                            $_SESSION['is_loggedin']  =  $user ['email'];   
+                            $_SESSION['is_loggedin']  = true;   
 
                             $_SESSION['profile_url']  = $user['profile_url'];
 

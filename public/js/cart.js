@@ -212,7 +212,42 @@ console.log(' cart_id is ',cart_id);
 
     }
 
+    const place_order = async(e) => {
 
+        
+
+        const http_response = await fetch('/api/place_order');
+    
+        if(http_response.ok){
+
+
+            const json_response = await http_response.json()
+
+            console.log(json_response.data);
+
+
+
+        }
+            
+
+
+
+
+
+    }
+
+
+    const handle_place_order = async ()=> {
+
+    
+        place_order_button.addEventListener("click",place_order);
+
+
+
+
+
+
+    }
 
 
 
@@ -221,5 +256,10 @@ console.log(' cart_id is ',cart_id);
 
 
 fetch_cart_info();
+
+handle_place_order();
+
+
+
 
 })

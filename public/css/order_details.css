@@ -1,0 +1,33 @@
+html {
+
+    font-size: 16px;
+
+
+
+}
+
+body {
+
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    grid-template-rows: 1fr 5fr;
+
+
+
+}
+
+h1{
+    text-align: center;
+}
+
+tr{
+
+    border-bottom: 0.025rem solid black;
+
+}
+
+td{
+    background-color: lightyellow;
+}

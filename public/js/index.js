@@ -265,10 +265,6 @@ const handle_submit = async (e) =>{
         const response_http = await fetch('/api/register',{method:'POST',body:form_data});
 
 
-
-
-
-
         const response_json = await response_http.json();
 
 

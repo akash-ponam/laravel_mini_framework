@@ -1,0 +1,93 @@
+html {
+
+    
+    font-size:16px;
+
+
+
+
+}
+
+h1{
+
+    text-align: center;
+
+    padding: 0.25rem;
+
+    display: block;
+
+    border-block: 0.25rem solid purple;
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100vw;
+
+    height: max-content;
+
+
+}
+
+
+body {
+
+    width: 100vw;
+
+    height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+
+
+
+}
+
+
+
+
+table{
+
+    width: 70vw;
+    height: max-content;
+
+    table-layout: fixed;
+
+
+}
+
+
+td,thead >tr >td{
+
+    text-align: center;
+    
+    padding:0.5rem;
+
+    font-size: 3rem;
+    
+}
+
+
+tr {
+
+    border-bottom: 0.025rem solid black;
+}
+
+thead {
+
+    font-size: 4rem;
+
+}
+
+thead tr{
+
+    border-bottom: 0.25rem solid black;
+
+}
