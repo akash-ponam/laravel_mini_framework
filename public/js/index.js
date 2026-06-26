@@ -67,7 +67,7 @@ const login_btn_text = document.getElementById('login_btn_text');
 
     document.getElementById('usr_img').src = user.profile_url;
 
-    document.getElementById()
+    // document.getElementById()
         
 
     }
@@ -93,7 +93,7 @@ const login_btn_text = document.getElementById('login_btn_text');
 const switch_to_login = (e) => {
 
     console.log('console');
-    e.preventDefault();
+    // e.preventDefault();
     register_view.style.display='none';
     login_view.style.display='block';
 
@@ -104,7 +104,7 @@ const switch_to_login = (e) => {
 const switch_to_register = (e) => {
 
 
-    e.preventDefault();
+    // e.preventDefault();
     register_view.style.display='block';
     login_view.style.display='none';
 
@@ -166,6 +166,7 @@ login_to_reg_btn.addEventListener("click",switch_to_register);
 
 const handle_login = async (e)  => {
 
+e.preventDefault();
 
 login_btn_spinner.style.display='block';
 
@@ -174,7 +175,6 @@ login_btn_text.style.display='none';
 
 
 
-e.preventDefault();
 
 const login_form_data = new FormData(login_form);
 
@@ -193,28 +193,25 @@ try {
 
             console.log(' user registeration complete !!!!');
 
-            localStorage.setItem("user_loggedin",true);
-            
-            localStorage.setItem('user_mail',response_json.data.email);
-
-            localStorage.setItem('user_profile_url',response_json.data.profile_url);
-
-
-            setTimeout(()=>{
-
-
+    
                 if(response_json.status==='success'){
 
-                show_profile(response_json.data);
+                    show_profile(response_json.data);
+
+                    localStorage.setItem("user_loggedin",true);
+
+                    localStorage.setItem('user_mail',response_json.data.email);
+
+                    localStorage.setItem('user_profile_url',response_json.data.profile_url);
 
                     window.location.href='/products';
+
+
+
                 }
 
-                
 
-            },800);
-
-
+          
 
 
 
@@ -234,7 +231,9 @@ try {
 
     
 } catch (error) {
+    
 
+    console.log("error is ",error)
     
     login_btn_spinner.style.display='none';
 
